@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROPA and DPIA Drafter</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#14213d;--muted:#5c677d;--line:#e3e7ee;--brand:#3046c5;--bg:#f5f7fb;--ok:#0f7a4f;--warn:#b45309;--bad:#b42318}
+  *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 16px 60px}
+  .tag{display:inline-block;background:#e0e7ff;color:var(--brand);font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px}
+  h1{font-size:28px;margin:10px 0 4px;letter-spacing:-.5px}.lead{color:var(--muted);margin:0}
+  .grid{display:grid;grid-template-columns:400px 1fr;gap:20px;margin-top:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+  label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:10px 0 4px}
+  input,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:inherit;font-size:14px}
+  textarea{min-height:58px;resize:vertical}
+  .btn{margin-top:14px;width:100%;padding:12px;border:0;border-radius:10px;background:var(--brand);color:#fff;font-weight:700;font-size:15px;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line);width:auto;padding:8px 14px;font-size:13px;margin:0}
+  .st{margin-top:10px;font-size:13px;color:var(--brand);min-height:16px}
+  h2{font-size:17px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+  h3{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--brand);margin:18px 0 8px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}td,th{border-top:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+  th{color:var(--muted);font-weight:600;width:190px}
+  .art{display:inline-block;background:#eef2ff;color:var(--brand);font-weight:700;font-size:11.5px;padding:1px 7px;border-radius:6px;margin:1px 3px 1px 0}
+  .pill{font-weight:800;font-size:12px;padding:2px 9px;border-radius:999px}.y{background:#fde8e8;color:var(--bad)}.n{background:#e7f6ee;color:var(--ok)}
+  .verdict{padding:12px 14px;border-radius:10px;font-weight:700;margin-top:6px}.req{background:#fff1f0;color:var(--bad)}.nreq{background:#ecfdf3;color:var(--ok)}
+  .q{background:#fffbeb;border-radius:10px;padding:10px 14px;font-size:13.5px}
+  .empty{color:var(--muted);text-align:center;padding:60px 10px}
+  footer{margin-top:18px;color:var(--muted);font-size:12.5px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<span class="tag">DEMO · GDPR ART. 30 + ART. 35</span>
+<h1>ROPA entry and DPIA screening in a minute</h1>
+<p class="lead">Describe one processing activity. Get a draft Article 30 record and a WP248 DPIA screening, with the GDPR articles cited. Your DPO reviews and signs off.</p>
+<div class="grid">
+ <div class="card">
+  <label>Processing activity</label><input id="activity">
+  <label>Controller</label><input id="controller">
+  <label>Purpose(s)</label><textarea id="purpose"></textarea>
+  <label>Data subjects</label><input id="subjects">
+  <label>Personal data collected</label><textarea id="data"></textarea>
+  <label>Systems, vendors and recipients</label><textarea id="recipients"></textarea>
+  <label>Where data is stored / transferred</label><input id="location">
+  <label>Retention</label><input id="retention">
+  <label>Anything else (AI use, scale, profiling…)</label><textarea id="other"></textarea>
+  <button class="btn" id="go">Draft ROPA + DPIA screening</button>
+  <div class="st" id="st"></div>
+ </div>
+ <div class="card" id="out"><div class="empty">The draft appears here.</div></div>
+</div>
+<footer>Demo by Saqib. Drafts are a starting point for a qualified DPO, not legal advice. Model: GPT-OSS 120B on Groq, no data stored.</footer>
+</div>
+<script>
+const S={activity:'Online appointment booking and reminders via WhatsApp',controller:'A private multi-specialty clinic group (EU patients)',
+purpose:'Let patients book, change and cancel appointments; send reminders; reduce no-shows',
+subjects:'Patients, including minors booked by parents',
+data:'Name, phone, date of birth, appointment type and doctor (reveals health condition), insurance number, chat messages',
+recipients:'WhatsApp Business API (Meta), booking SaaS vendor, front-desk staff, doctors',
+location:'Booking SaaS hosted in the EU; WhatsApp messages processed by Meta (may leave the EU)',
+retention:'Not defined yet',other:'Around 40,000 patients a year. A chatbot suggests the right specialist from symptoms the patient types.'};
+const $=id=>document.getElementById(id),F=Object.keys(S);
+F.forEach(k=>$(k).value=S[k]);
+const esc=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const A=a=>a?String(a).split(/[,;]\s*/).map(x=>`<span class="art">${esc(/art/i.test(x)?x:'Art. '+x)}</span>`).join(''):'';
+const L=a=>(a||[]).map(esc).join('<br>')||'To confirm';
+function render(d){
+ const r=d.ropa||{},p=d.dpia||{};
+ const sc=r.special_category||{},tr=r.international_transfers||{};
+ $('out').innerHTML=`<h2>Draft for review <button class="btn ghost" id="dl">Download Word</button></h2>
+ <h3>ROPA entry · Art. 30(1)</h3><table>
+ <tr><th>Activity</th><td>${esc(r.activity)}</td></tr><tr><th>Controller</th><td>${esc(r.controller)}</td></tr>
+ <tr><th>Purposes</th><td>${L(r.purposes)}</td></tr>
+ <tr><th>Lawful basis</th><td>${(r.lawful_basis||[]).map(b=>`${A(b.article)} ${esc(b.basis)}: ${esc(b.why)}`).join('<br>')}</td></tr>
+ <tr><th>Special category data</th><td>${sc.applies?`Yes ${A(sc.article)} ${esc(sc.condition)}`:'No'}</td></tr>
+ <tr><th>Data subjects</th><td>${L(r.data_subjects)}</td></tr><tr><th>Data categories</th><td>${L(r.data_categories)}</td></tr>
+ <tr><th>Recipients</th><td>${L(r.recipients)}</td></tr><tr><th>Processors</th><td>${L(r.processors)} <span class="art">Art. 28</span></td></tr>
+ <tr><th>International transfers</th><td>${tr.applies?`${esc(tr.destination)} · ${esc(tr.safeguard)} ${A(tr.article)}`:'None identified'}</td></tr>
+ <tr><th>Retention</th><td>${esc(r.retention)}</td></tr><tr><th>Security measures</th><td>${L(r.security_measures)} <span class="art">Art. 32</span></td></tr></table>
+ <h3>DPIA screening · Art. 35 + EDPB WP248</h3><table>
+ ${(p.criteria||[]).map(c=>`<tr><th>${esc(c.criterion)}</th><td><span class="pill ${c.met?'y':'n'}">${c.met?'MET':'NOT MET'}</span> ${esc(c.reason)}</td></tr>`).join('')}</table>
+ <div class="verdict ${p.dpia_required?'req':'nreq'}">${p.criteria_met??'?'} of 9 criteria met → ${p.dpia_required?'DPIA required':'DPIA not required'} <span class="art">Art. 35</span><br><span style="font-weight:500">${esc(p.conclusion)}</span></div>
+ <h3>Key risks and mitigations</h3><table>${(p.key_risks||[]).map(k=>`<tr><th>${esc(k.risk)}</th><td>Likelihood ${esc(k.likelihood)}, severity ${esc(k.severity)}<br>${esc(k.mitigation)} ${A(k.article)}</td></tr>`).join('')}</table>
+ <h3>Open questions for the controller</h3><div class="q">${L(d.open_questions)}</div>`;
+ $('dl').onclick=()=>{const h='<html><meta charset="utf-8"><body style="font-family:Calibri">'+$('out').innerHTML.replace(/<button[^>]*>.*?<\/button>/,'')+'</body></html>';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h],{type:'application/msword'}));a.download='ROPA-DPIA-draft.doc';a.click()};
+}
+$('go').onclick=async()=>{
+ $('st').textContent='Drafting… (about 20 seconds)';$('go').disabled=true;
+ const body={};F.forEach(k=>body[k]=$(k).value);
+ try{const r=await fetch('/api/draft',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();
+  if(!r.ok)throw new Error(d.error||r.status);render(d);$('st').textContent='Done ✓';}catch(e){$('st').textContent='Error: '+e.message}
+ $('go').disabled=false;
+};
+</script></body></html>
