@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Health IG Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#14213d;--muted:#5c677d;--line:#e3e7ee;--brand:#3046c5;--soft:#eef2ff;--bg:#f5f7fb;--ok:#0f7a4f;--okbg:#e7f6ee;--warn:#b45309;--warnbg:#fff4e0;--bad:#b42318;--badbg:#fde8e8;--card:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+  .wrap{max-width:1280px;margin:0 auto;padding:20px 16px 60px}
+  .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .tag{display:inline-block;background:var(--soft);color:var(--brand);font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px}
+  h1{font-size:25px;margin:10px 0 4px;letter-spacing:-.5px}
+  .lead{color:var(--muted);margin:0;max-width:820px}
+  nav{display:flex;gap:2px;flex-wrap:wrap;margin:16px 0 14px;border-bottom:1px solid var(--line)}
+  nav button{border:0;background:none;padding:10px 11px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  nav button.on{color:var(--brand);border-color:var(--brand)}
+  nav .n{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:999px;background:var(--badbg);color:var(--bad);font-size:11px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+  h2{font-size:17px;margin:0 0 4px}
+  h3{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--brand);margin:16px 0 8px}
+  .sub{color:var(--muted);margin:0 0 12px;font-size:13px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .kpi b{display:block;font-size:24px}.kpi span{color:var(--muted);font-size:12.5px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  td,th{border-top:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;background:#fafbfd}
+  tr.click{cursor:pointer}tr.click:hover td{background:#f8faff}
+  .scroll{overflow-x:auto}
+  .chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;margin:1px 3px 1px 0;white-space:nowrap}
+  .c-sp{background:var(--badbg);color:var(--bad)}.c-ch{background:#f3e8ff;color:#6b21a8}.c-cr{background:#1f2937;color:#fff}
+  .c-leg{background:var(--warnbg);color:var(--warn)}.c-ai{background:#e0f2fe;color:#075985}.c-xb{background:#fef9c3;color:#854d0e}
+  .c-ok{background:var(--okbg);color:var(--ok)}.c-n{background:#f1f5f9;color:var(--muted)}
+  .ref{display:inline-block;background:var(--soft);color:var(--brand);font-weight:700;font-size:11.5px;padding:1px 7px;border-radius:6px;margin:1px 3px 1px 0;white-space:nowrap}
+  .alert{display:flex;gap:10px;padding:9px 12px;border-radius:10px;margin-bottom:7px;font-size:13px;align-items:flex-start}
+  .alert.r{background:var(--badbg)}.alert.a{background:var(--warnbg)}.alert.g{background:var(--okbg)}
+  .alert b{white-space:nowrap}
+  .lvl{font-weight:800;font-size:12px;padding:2px 9px;border-radius:999px;white-space:nowrap}
+  .H{background:var(--badbg);color:var(--bad)}.M{background:var(--warnbg);color:var(--warn)}.L{background:var(--okbg);color:var(--ok)}
+  select,input,textarea{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:7px;padding:5px 7px;background:#fff;color:var(--ink)}
+  textarea{width:100%;min-height:54px;resize:vertical}
+  .btn{border:0;border-radius:9px;background:var(--brand);color:#fff;font-weight:700;padding:8px 13px;cursor:pointer;font:inherit;font-size:13px;white-space:nowrap}
+  .btn.g{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn.s{padding:4px 9px;font-size:12px}.btn.r{background:var(--bad)}
+  .btns{display:flex;gap:6px;flex-wrap:wrap}
+  .sys{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+  .syscard{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;cursor:pointer}
+  .syscard:hover{border-color:var(--brand)}
+  .syscard h4{margin:0 0 4px;font-size:14px}.syscard p{margin:0 0 6px;color:var(--muted);font-size:12.5px}
+  .chk{display:flex;gap:8px;align-items:flex-start;padding:7px 8px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:#fff;cursor:pointer}
+  .chk input{margin-top:3px}
+  .verdict{padding:11px 14px;border-radius:10px;font-weight:700;margin:8px 0}
+  .v-r{background:var(--badbg);color:var(--bad)}.v-g{background:var(--okbg);color:var(--ok)}.v-a{background:var(--warnbg);color:var(--warn)}
+  .steps{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0 12px}
+  .step{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:#f1f5f9;color:var(--muted)}
+  .step.done{background:var(--okbg);color:var(--ok)}.step.now{background:var(--brand);color:#fff}
+  .dpsel{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .dpsel button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font:inherit;font-weight:600;cursor:pointer}
+  .dpsel button.on{border-color:var(--brand);color:var(--brand);background:var(--soft)}
+  .note{background:#fffbeb;border-radius:10px;padding:10px 14px;font-size:13px;color:#6b4e00;margin-bottom:10px}
+  .matrix td{text-align:center;font-size:12px}.matrix td:first-child{text-align:left;font-weight:600}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+  .fld{margin-bottom:10px}.fld label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+  .fld input[type=text],.fld input[type=number],.fld input[type=date],.fld input[type=datetime-local],.fld select{width:100%}
+  .multi{display:flex;flex-wrap:wrap;gap:4px 12px;max-height:150px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+  .multi label{display:flex;gap:5px;align-items:center;font-weight:500;color:var(--ink);font-size:12.5px;margin:0}
+  dialog{border:0;border-radius:14px;padding:0;width:min(760px,96vw);max-height:90vh;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+  dialog .in{padding:18px;overflow:auto;max-height:calc(90vh - 60px)}
+  dialog .ft{display:flex;justify-content:space-between;gap:8px;padding:12px 18px;border-top:1px solid var(--line);background:#fafbfd}
+  .f2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+  .rk td{font-size:12.5px}.rk textarea{min-height:44px;font-size:12.5px}
+  .muted{color:var(--muted)}
+  footer{margin-top:18px;color:var(--muted);font-size:12.5px}
+  .hide{display:none}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.f2{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<div class="top">
+ <div><span class="tag">PROTOTYPE · FICTIONAL DATA · UK GDPR + DSPT + ISO 27001 / 42001</span>
+ <h1>Information governance workspace for health and care</h1>
+ <p class="lead" id="orgline"></p></div>
+ <div class="btns">
+  <button class="btn g" onclick="exportJSON()">Back up data</button>
+  <button class="btn g" onclick="document.getElementById('imp').click()">Restore</button>
+  <input type="file" id="imp" accept=".json" class="hide" onchange="importJSON(this)">
+  <button class="btn g" onclick="resetDemo()">Reset demo</button>
+ </div>
+</div>
+
+<nav id="tabs"></nav>
+<main id="view"></main>
+
+<footer>Prototype for discussion. All organisations, people, systems and figures are fictional. Edits are saved only in this browser. Control and DSPT references are a draft mapping to be confirmed by a qualified assessor; this is not legal advice.</footer>
+</div>
+
+<dialog id="dlg"><form method="dialog" onsubmit="return false"><div class="in" id="dlgBody"></div>
+<div class="ft"><div id="dlgDel"></div><div class="btns"><button class="btn g" type="button" onclick="dlg.close()">Cancel</button><button class="btn" type="button" id="dlgSave">Save</button></div></div></form></dialog>
+
+<script>
+// ================= reference lists =================
+const TODAY = new Date().toISOString().slice(0,10);
+const DATA_CATS = ["Identity","Contact","Health","Mental health","Medication","Care plan","Therapy notes","Audio recordings","Safeguarding","Allegations","Education","SEN/health","Attendance","Financial","Bank details","Salary","Tax status","Wealth indicators","Interests","Employment history","Criminal offence data","Availability","Ethnicity","Religion","Sexual orientation","Biometric","Genetic"];
+const SPECIAL = ["Health","Mental health","Medication","Care plan","Therapy notes","SEN/health","Ethnicity","Religion","Sexual orientation","Biometric","Genetic"];
+const SUBJECTS = ["Children","Parents/guardians","Former service users","External professionals","Staff","Applicants","Volunteers","Supporters","Prospects"];
+const ART6 = ["6(1)(a) consent","6(1)(b) contract","6(1)(c) legal obligation","6(1)(d) vital interests","6(1)(e) public task","6(1)(f) legitimate interests"];
+const ART9 = ["n/a","9(2)(a) explicit consent","9(2)(b) employment, social security","9(2)(c) vital interests","9(2)(f) legal claims","9(2)(g) substantial public interest","9(2)(h) health or social care","9(2)(i) public health","9(2)(j) archiving, research, statistics"];
+const NDO = ["n/a","No (individual care)","No (safeguarding / legal)","Yes: apply opt-out before release","Not health or care data"];
+const HOSTS = ["UK cloud","EU cloud","US cloud","Canada","On-premise","Paper / on-site"];
+const TRANSFER = ["None (UK only)","UK adequacy regulations","IDTA","UK Addendum to EU SCCs","Other / unclear"];
+const CERTS = ["ISO 27001","ISO 42001","Cyber Essentials","Cyber Essentials Plus","DSPT Standards Met","SOC 2"];
+const SCREEN = [
+ "Special category or criminal offence data on a large scale",
+ "Children or other vulnerable people",
+ "New technology or a new use of technology (including AI)",
+ "Automated decisions with legal or similar significant effect",
+ "Profiling, evaluation or scoring of individuals",
+ "Systematic monitoring",
+ "Matching or combining datasets from different sources",
+ "Transfer outside the UK",
+ "Data processed on a large scale",
+ "Processing that could stop people using a service or exercising a right",
+];
+const TREAT = ["Modify (add controls)","Avoid (stop or change the processing)","Share (contract, insurance)","Accept (record the reason)"];
+const RSTAT = ["Not started","In progress","Done"];
+const SIGN = ["Pending","Approved","Approved with conditions","Rejected"];
+const ROLES = ["DPO","Caldicott Guardian","SIRO","Information Asset Owner"];
+
+const CONTROLS = {
+ "27001:5.1":["ISO 27001:2022","Policies for information security"],
+ "27001:5.9":["ISO 27001:2022","Inventory of information and other associated assets"],
+ "27001:5.10":["ISO 27001:2022","Acceptable use of information and other associated assets"],
+ "27001:5.12":["ISO 27001:2022","Classification of information"],
+ "27001:5.14":["ISO 27001:2022","Information transfer"],
+ "27001:5.15":["ISO 27001:2022","Access control"],
+ "27001:5.18":["ISO 27001:2022","Access rights"],
+ "27001:5.19":["ISO 27001:2022","Information security in supplier relationships"],
+ "27001:5.20":["ISO 27001:2022","Addressing information security within supplier agreements"],
+ "27001:5.22":["ISO 27001:2022","Monitoring, review and change management of supplier services"],
+ "27001:5.23":["ISO 27001:2022","Information security for use of cloud services"],
+ "27001:5.24":["ISO 27001:2022","Incident management planning and preparation"],
+ "27001:5.26":["ISO 27001:2022","Response to information security incidents"],
+ "27001:5.31":["ISO 27001:2022","Legal, statutory, regulatory and contractual requirements"],
+ "27001:5.34":["ISO 27001:2022","Privacy and protection of PII"],
+ "27001:6.3":["ISO 27001:2022","Information security awareness, education and training"],
+ "27001:7.10":["ISO 27001:2022","Storage media"],
+ "27001:8.8":["ISO 27001:2022","Management of technical vulnerabilities"],
+ "27001:8.10":["ISO 27001:2022","Information deletion"],
+ "27001:8.11":["ISO 27001:2022","Data masking"],
+ "27001:8.13":["ISO 27001:2022","Information backup"],
+ "27001:8.15":["ISO 27001:2022","Logging"],
+ "27001:8.20":["ISO 27001:2022","Networks security"],
+ "27001:8.24":["ISO 27001:2022","Use of cryptography"],
+ "42001:A.5.2":["ISO 42001:2023","AI system impact assessment process"],
+ "42001:A.5.4":["ISO 42001:2023","Assessing AI system impact on individuals or groups"],
+ "42001:A.6.2.4":["ISO 42001:2023","AI system verification and validation"],
+ "42001:A.6.2.6":["ISO 42001:2023","AI system operation and monitoring"],
+ "42001:A.7.4":["ISO 42001:2023","Quality of data for AI systems"],
+ "42001:A.7.5":["ISO 42001:2023","Data provenance"],
+ "42001:A.8.2":["ISO 42001:2023","System documentation and information for users"],
+ "42001:A.9.2":["ISO 42001:2023","Processes for responsible use of AI systems"],
+ "42001:A.10.3":["ISO 42001:2023","Suppliers"],
+};
+const DSPT = {
+ "1.1.2":"Responsibility for data security and protection is assigned",
+ "1.4.1":"Up-to-date record of how personal data is held and shared",
+ "1.4.4":"National data opt-out compliance",
+ "1.6.5":"Risks assessed when a process changes or a new project starts (DPIA)",
+ "1.6.7":"Unmitigated DPIA risks notified to the ICO",
+ "1.7.2":"Contracts with third parties that destroy records or equipment",
+ "1.7.4":"Records retention schedule",
+ "4.1.2":"Knowing who has access to personal data",
+ "6.1.1":"System to report data breaches",
+ "7.3.4":"Backups routinely tested",
+ "8.1.4":"Systems still supported by the manufacturer",
+};
+const AIQ = [
+ ["purpose","What the AI does and who uses it"],
+ ["role","Does a person review every output before it is used?"],
+ ["accuracy","How accuracy is tested and how often"],
+ ["training","Is our data used to train the vendor's models?"],
+ ["bias","Groups that could be treated unfairly"],
+ ["transparency","How people are told AI is used"],
+ ["fallback","What happens if the AI is wrong or unavailable"],
+];
+const AICTRL = ["42001:A.5.2","42001:A.5.4","42001:A.6.2.4","42001:A.6.2.6","42001:A.7.4","42001:A.7.5","42001:A.8.2","42001:A.9.2","42001:A.10.3"];
+// 10-stage implementation programme; each stage points at the tab that holds its work
+const STAGES = [
+ [1,"Leadership buy-in and executive support letter",""],
+ [2,"Roles, awareness and training (incl. privacy champions)","settings"],
+ [3,"Data mapping and personal data analysis","ropa"],
+ [4,"Privacy policies and notices",""],
+ [5,"Data subject rights and subject access requests",""],
+ [6,"Controllers and processors: due diligence and contracts","vendors"],
+ [7,"DPIA and risk management","dpia"],
+ [8,"International transfers","vendors"],
+ [9,"Breach management (Articles 33 and 34)","breach"],
+ [10,"Information security policies mapped to ISO 27001","controls"],
+];
+// readiness (gap) assessment areas: [key, area, requirement, law, stage]
+const GAP = [
+ ["roles","Accountability and roles","DPO, SIRO and Caldicott Guardian named; responsibilities written down","Art 5(2), 24, 37-39",2],
+ ["policy","Data protection policy","Approved by management and communicated to all staff","Art 24(2)",4],
+ ["training","Awareness training","All staff trained; refresher every year","Art 39(1)(b)",2],
+ ["ropa","Data map and RoPA","Every processing activity recorded and confirmed by its owner","Art 30",3],
+ ["lawful","Lawful basis","Article 6 basis, plus Article 9 / Schedule 1 condition for special category data","Art 6, 9, 10",3],
+ ["lia","Legitimate interests","Balancing test recorded wherever legitimate interests are relied on","Art 6(1)(f)",3],
+ ["consent","Consent management","Consent is specific, recorded and as easy to withdraw as to give","Art 7, 8",4],
+ ["notices","Privacy notices","Notices cover every activity, incl. children's versions","Art 12-14",4],
+ ["dsar","Subject rights","Process and register for access, erasure, rectification and objection requests","Art 15-22",5],
+ ["retention","Retention","Retention period set for every activity and actually applied","Art 5(1)(e)",3],
+ ["processors","Processor contracts","Due diligence and an Article 28 agreement for every processor","Art 28",6],
+ ["transfers","International transfers","A valid mechanism for every transfer outside the UK","Art 44-49",8],
+ ["dpia","DPIA and risk","DPIAs for high-risk processing, with actions tracked and signed off","Art 35, 36",7],
+ ["ai","AI governance","Every AI tool inventoried, risk-tiered and assessed","EU AI Act; ICO AI guidance",7],
+ ["breach","Breach management","Procedure, log and 72-hour reporting route","Art 33, 34",9],
+ ["security","Security measures","Technical and organisational measures mapped to ISO 27001","Art 32",10],
+ ["minimise","Data minimisation","Only the data needed is collected; pseudonymise or anonymise where possible","Art 5(1)(c), 25",3],
+];
+const RAGN={R:"Red",A:"Amber",G:"Green"};
+const AITIER=["Prohibited","High (Annex III)","Limited (transparency)","Minimal"];
+const AISTATUS=["Approved","Pilot","Requested","Shadow (not approved)","Retired"];
+
+// ================= seed data (fictional) =================
+const SEED = {
+ org:{name:"Meadowbrook Children's Care Trust",type:"Care provider (children's health, care and education)",dpo:"A. Morgan (DPO)",cg:"Dr R. Shah (Caldicott Guardian)",siro:"J. Okafor (SIRO)",law:"UK GDPR + DPA 2018",scoreHigh:12,scoreMed:5},
+ depts:[
+  {id:"care",name:"Care & Therapy",owner:"Head of Clinical Services",attested:"2026-06-20"},
+  {id:"school",name:"School & Education",owner:"Head Teacher",attested:"2026-06-18"},
+  {id:"fund",name:"Fundraising",owner:"Head of Fundraising",attested:""},
+  {id:"hr",name:"HR & Volunteers",owner:"HR Manager",attested:"2025-06-30"},
+ ],
+ vendors:[
+  {id:"V1",name:"CareRecord Ltd",service:"Cloud EPR",role:"Processor",location:"UK",transfer:"None (UK only)",dpa:true,certs:["ISO 27001","Cyber Essentials Plus","DSPT Standards Met"],sub:"UK cloud host",noTrain:true,lastReview:"2026-03-10",changed:"",change:""},
+  {id:"V2",name:"ScribeAI Inc",service:"AI transcription and note drafting",role:"Processor",location:"USA",transfer:"IDTA",dpa:true,certs:["ISO 27001","SOC 2"],sub:"US cloud host; speech model provider (US), added 2 Nov 2026",noTrain:true,lastReview:"2026-09-28",changed:"2026-11-02",change:"Added a new US sub-processor (speech model provider)"},
+  {id:"V3",name:"SchoolSys",service:"School information system",role:"Processor",location:"UK",transfer:"None (UK only)",dpa:true,certs:["ISO 27001","Cyber Essentials"],sub:"UK cloud host",noTrain:true,lastReview:"2026-02-01",changed:"",change:""},
+  {id:"V4",name:"DonorHub",service:"Supporter CRM",role:"Processor",location:"Ireland (EU)",transfer:"UK adequacy regulations",dpa:true,certs:["ISO 27001"],sub:"EU cloud host",noTrain:true,lastReview:"2025-08-15",changed:"",change:""},
+  {id:"V5",name:"PeoplePay",service:"HR and payroll",role:"Processor",location:"UK",transfer:"None (UK only)",dpa:true,certs:["ISO 27001","Cyber Essentials"],sub:"UK cloud host",noTrain:true,lastReview:"2026-04-02",changed:"",change:""},
+  {id:"V6",name:"VolunteerCo",service:"Volunteer management",role:"Processor",location:"Canada",transfer:"UK adequacy regulations",dpa:true,certs:["SOC 2"],sub:"Canadian cloud host",noTrain:true,lastReview:"2026-01-20",changed:"",change:""},
+  {id:"V7",name:"Prospect Insight",service:"Major donor research",role:"Processor",location:"UK",transfer:"None (UK only)",dpa:false,certs:[],sub:"Unknown",noTrain:false,lastReview:"",changed:"",change:""},
+  {id:"V8",name:"SecureShred",service:"Paper and IT equipment destruction",role:"Processor",location:"UK",transfer:"None (UK only)",dpa:true,certs:["ISO 27001"],sub:"None",noTrain:true,lastReview:"2026-05-05",changed:"",change:""},
+ ],
+ systems:[
+  {id:"S1",name:"CareRecord EPR",kind:"Cloud electronic patient record",host:"UK cloud",depts:["care"],owner:"Head of Clinical Services",vendor:"V1",legacy:false,supported:true,paper:false,ai:false,audit:true,changed:"",change:""},
+  {id:"S2",name:"TherapyNotes DB",kind:"Access database on a file server",host:"On-premise",depts:["care"],owner:"Therapy Lead",vendor:"",legacy:true,supported:false,paper:false,ai:false,audit:false,changed:"",change:"Vendor support ended 2019; holds 2012-2021 therapy notes"},
+  {id:"S3",name:"Paper care files",kind:"Locked cabinets in 3 houses",host:"Paper / on-site",depts:["care"],owner:"House Managers",vendor:"V8",legacy:false,supported:true,paper:true,ai:false,audit:false,changed:"",change:""},
+  {id:"S4",name:"School MIS",kind:"Cloud school information system",host:"UK cloud",depts:["school"],owner:"Head Teacher",vendor:"V3",legacy:false,supported:true,paper:false,ai:false,audit:true,changed:"",change:""},
+  {id:"S5",name:"Shared drive (G:)",kind:"Network share, unstructured folders",host:"On-premise",depts:["care","school","fund","hr"],owner:"IT Manager",vendor:"",legacy:true,supported:true,paper:false,ai:false,audit:false,changed:"",change:"Copies of reports, EHCPs and DBS letters saved by staff"},
+  {id:"S6",name:"Supporter CRM",kind:"SaaS CRM",host:"EU cloud",depts:["fund"],owner:"Head of Fundraising",vendor:"V4",legacy:false,supported:true,paper:false,ai:false,audit:true,changed:"",change:""},
+  {id:"S7",name:"HR & Payroll",kind:"SaaS HR system",host:"UK cloud",depts:["hr"],owner:"HR Manager",vendor:"V5",legacy:false,supported:true,paper:false,ai:false,audit:true,changed:"",change:""},
+  {id:"S8",name:"Volunteer portal",kind:"SaaS volunteer management",host:"Canada",depts:["hr"],owner:"Volunteer Coordinator",vendor:"V6",legacy:false,supported:true,paper:false,ai:false,audit:true,changed:"",change:""},
+  {id:"S9",name:"AI session notes (pilot)",kind:"AI transcription and note drafting",host:"US cloud",depts:["care"],owner:"Therapy Lead",vendor:"V2",legacy:false,supported:true,paper:false,ai:true,audit:true,changed:"2026-11-02",change:"Vendor added a US sub-processor"},
+  {id:"S10",name:"Safeguarding log",kind:"Spreadsheet on the shared drive",host:"On-premise",depts:["care","school"],owner:"Designated Safeguarding Lead",vendor:"",legacy:true,supported:true,paper:false,ai:false,audit:false,changed:"",change:""},
+ ],
+ ropa:[
+  {id:"RA-01",dept:"care",name:"Referral and admission assessments",owner:"Head of Clinical Services",subjects:["Children","Parents/guardians","External professionals"],data:["Identity","Contact","Health","Mental health","Safeguarding","Education"],a6:["6(1)(e) public task","6(1)(b) contract"],a9:"9(2)(h) health or social care",cond:"DPA 2018 Sch 1 para 2",lia:false,ndo:"No (individual care)",recip:"NHS trusts; local authority; ICB commissioners",systems:["S1","S3","S5"],ret:"Until 25th birthday (26th if 17 at discharge)",records:420,reviewed:"2026-06-20"},
+  {id:"RA-02",dept:"care",name:"Therapy delivery and session notes",owner:"Therapy Lead",subjects:["Children","Parents/guardians"],data:["Identity","Health","Mental health","Therapy notes","Audio recordings"],a6:["6(1)(e) public task"],a9:"9(2)(h) health or social care",cond:"DPA 2018 Sch 1 para 2",lia:false,ndo:"No (individual care)",recip:"NHS trusts; AI notes vendor (processor)",systems:["S1","S2","S9"],ret:"Until 25th birthday (26th if 17 at discharge)",records:380,reviewed:"2026-10-12"},
+  {id:"RA-03",dept:"care",name:"Safeguarding concerns and referrals",owner:"Designated Safeguarding Lead",subjects:["Children","Parents/guardians","Staff"],data:["Identity","Safeguarding","Health","Allegations","Criminal offence data"],a6:["6(1)(c) legal obligation"],a9:"9(2)(g) substantial public interest",cond:"DPA 2018 Sch 1 para 18 (safeguarding)",lia:false,ndo:"No (safeguarding / legal)",recip:"Local authority children's services; police; regulator",systems:["S10","S5","S1"],ret:"Per safeguarding retention schedule",records:95,reviewed:"2026-06-20"},
+  {id:"RA-04",dept:"care",name:"Emergency sharing with ambulance and A&E",owner:"Head of Clinical Services",subjects:["Children"],data:["Identity","Health","Medication","Care plan"],a6:["6(1)(d) vital interests","6(1)(e) public task"],a9:"9(2)(c) vital interests",cond:"",lia:false,ndo:"No (individual care)",recip:"Ambulance service; hospital A&E",systems:["S1","S3"],ret:"As per care record",records:60,reviewed:"2026-06-20"},
+  {id:"RA-05",dept:"care",name:"Outcome research (with consent)",owner:"Research Lead",subjects:["Children","Parents/guardians"],data:["Health"],a6:["6(1)(a) consent"],a9:"9(2)(a) explicit consent",cond:"",lia:false,ndo:"Yes: apply opt-out before release",recip:"University research partner",systems:["S1"],ret:"5 years after study end",records:140,reviewed:"2026-06-20"},
+  {id:"RA-06",dept:"school",name:"Education records and EHCPs",owner:"Head Teacher",subjects:["Children","Parents/guardians"],data:["Identity","Education","SEN/health","Attendance"],a6:["6(1)(e) public task"],a9:"9(2)(g) substantial public interest",cond:"DPA 2018 Sch 1 para 6",lia:false,ndo:"Not health or care data",recip:"Local authority; DfE",systems:["S4","S5"],ret:"Until 25th birthday",records:150,reviewed:"2026-06-18"},
+  {id:"RA-07",dept:"fund",name:"Donations and Gift Aid",owner:"Head of Fundraising",subjects:["Supporters"],data:["Identity","Contact","Financial","Tax status"],a6:["6(1)(b) contract","6(1)(c) legal obligation"],a9:"n/a",cond:"",lia:false,ndo:"n/a",recip:"HMRC; payment provider",systems:["S6"],ret:"6 years after last gift",records:9200,reviewed:"2025-07-02"},
+  {id:"RA-08",dept:"fund",name:"Major donor research",owner:"Head of Fundraising",subjects:["Supporters","Prospects"],data:["Identity","Wealth indicators","Interests"],a6:["6(1)(f) legitimate interests"],a9:"n/a",cond:"",lia:false,ndo:"n/a",recip:"Prospect Insight (processor)",systems:["S6","S5"],ret:"2 years if no relationship",records:600,reviewed:"2025-07-02"},
+  {id:"RA-09",dept:"hr",name:"Recruitment and DBS checks",owner:"HR Manager",subjects:["Applicants","Staff"],data:["Identity","Contact","Employment history","Criminal offence data"],a6:["6(1)(b) contract","6(1)(c) legal obligation"],a9:"n/a",cond:"Art 10 + DPA 2018 Sch 1 para 1",lia:false,ndo:"n/a",recip:"DBS; recruitment platform",systems:["S7","S5"],ret:"6 months (unsuccessful); DBS outcome only",records:310,reviewed:"2025-06-30"},
+  {id:"RA-10",dept:"hr",name:"Payroll and pensions",owner:"HR Manager",subjects:["Staff"],data:["Identity","Bank details","Salary","Health"],a6:["6(1)(b) contract","6(1)(c) legal obligation"],a9:"9(2)(b) employment, social security",cond:"DPA 2018 Sch 1 para 1",lia:false,ndo:"n/a",recip:"HMRC; pension provider",systems:["S7"],ret:"6 years after leaving",records:520,reviewed:"2025-06-30"},
+  {id:"RA-11",dept:"hr",name:"Volunteer management",owner:"Volunteer Coordinator",subjects:["Volunteers"],data:["Identity","Contact","Availability","Criminal offence data"],a6:["6(1)(f) legitimate interests"],a9:"n/a",cond:"Art 10 + DPA 2018 Sch 1 para 1",lia:true,ndo:"n/a",recip:"VolunteerCo (processor, Canada)",systems:["S8"],ret:"2 years after last activity",records:230,reviewed:"2025-06-30"},
+  {id:"RA-12",dept:"care",name:"Legacy therapy archive (2012-2021)",owner:"Therapy Lead",subjects:["Former service users"],data:["Identity","Health","Mental health","Therapy notes"],a6:["6(1)(e) public task"],a9:"9(2)(h) health or social care",cond:"DPA 2018 Sch 1 para 2",lia:false,ndo:"No (individual care)",recip:"None routinely",systems:["S2"],ret:"Until 25th birthday; review due",records:1100,reviewed:"2026-06-20"},
+ ],
+ dpias:[
+  {id:"DPIA-01",title:"AI session notes pilot",activities:["RA-02"],systems:["S9"],owner:"Therapy Lead",status:"Under review",
+   screen:[0,1,2,7],
+   scope:"One therapy team (12 staff), sessions at the main site, ScribeAI service.",
+   purpose:"Record therapy sessions, transcribe them and draft a note that the therapist reviews before it enters the care record.",
+   necessity:"Cuts note-writing time so therapists spend more time with children. Audio is deleted after 30 days; only the reviewed note is kept. A manual note is used if the family says no.",
+   source:"Recorded in the session with the family's agreement.",storage:"Vendor cloud (US) for 30 days; final note in CareRecord EPR (UK).",access:"Pilot team only; vendor support under contract.",transfers:"USA under IDTA with a transfer risk assessment.",future:"Possible roll-out to all teams in 2027 (would trigger a review).",
+   risks:[
+    {id:"R1",text:"Recordings and transcripts held by a US vendor could be accessed outside UK law or kept longer than agreed.",L:3,I:4,existing:"DPA signed",opt:0,ctrl:["27001:5.19","27001:5.20","27001:5.23","42001:A.10.3"],action:"IDTA and transfer risk assessment; 30-day deletion in contract; ask for UK data residency.",owner:"DPO",due:"2026-12-15",st:"In progress",rL:2,rI:3},
+    {id:"R2",text:"The AI summary misses or invents details and an incorrect entry reaches the care record.",L:3,I:4,existing:"Therapist review",opt:0,ctrl:["42001:A.6.2.4","42001:A.9.2","42001:A.5.4"],action:"Therapist approves every note; AI notes marked as drafts; monthly audit of 20 notes against audio.",owner:"Therapy Lead",due:"2026-11-30",st:"In progress",rL:2,rI:3},
+    {id:"R3",text:"The vendor uses session data to train its models.",L:3,I:4,existing:"",opt:0,ctrl:["27001:5.20","42001:A.7.5","42001:A.10.3"],action:"Contract clause: no training on customer data; written confirmation; recheck at renewal.",owner:"DPO",due:"2026-11-20",st:"Done",rL:1,rI:4},
+    {id:"R4",text:"Children and families are not told that sessions are recorded and summarised by AI.",L:3,I:3,existing:"",opt:0,ctrl:["27001:5.34","42001:A.8.2"],action:"Update privacy notice and consent script; easy-read version for young people; opt-out offered.",owner:"DPO",due:"2026-11-30",st:"In progress",rL:2,rI:2},
+    {id:"R5",text:"Staff outside the team can open transcripts in the vendor portal.",L:2,I:4,existing:"Single sign-on",opt:0,ctrl:["27001:5.15","27001:5.18","27001:8.15"],action:"Access limited to the pilot team; quarterly access review; monthly log export.",owner:"IT Manager",due:"2026-11-15",st:"Done",rL:1,rI:4},
+   ],
+   sign:{"DPO":["Approved","2026-10-12"],"Caldicott Guardian":["Pending",""],"SIRO":["Pending",""]},
+   ico:false,reviewed:"2026-10-12",next:"2027-04-12",
+   triggers:"Vendor adds a sub-processor or changes hosting region; pilot extends beyond one team; any incident involving the AI service; annual DSPT review."},
+  {id:"DPIA-02",title:"Legacy therapy archive (TherapyNotes DB)",activities:["RA-12"],systems:["S2"],owner:"Therapy Lead",status:"Treatment in progress",
+   screen:[0,1,8],
+   scope:"Access database on the main file server with therapy notes for former service users (2012-2021).",
+   purpose:"Keep records until their retention period ends and make them available for continuing care or legal requests.",
+   necessity:"Retention is required; the question is where and how securely. Migration to the EPR archive is the preferred option.",
+   source:"Created by therapists 2012-2021.",storage:"On-premise server, not supported since 2019.",access:"Two named staff, read-only.",transfers:"None.",future:"Migration to CareRecord archive in Q1 2027.",
+   risks:[
+    {id:"R1",text:"The unpatched system is hit by ransomware and mental health records are lost or exposed.",L:4,I:5,existing:"Server firewall",opt:0,ctrl:["27001:8.8","27001:8.13","27001:8.20","27001:5.9"],action:"Isolate the server on its own network segment; tested offline backup; migrate to the EPR archive.",owner:"IT Manager",due:"2027-03-31",st:"In progress",rL:2,rI:5},
+    {id:"R2",text:"No audit log, so nobody can tell who viewed a record after a complaint or breach.",L:3,I:3,existing:"",opt:0,ctrl:["27001:8.15","27001:5.15"],action:"Read-only access for 2 named staff until migration; manual access register.",owner:"Therapy Lead",due:"2026-11-30",st:"Done",rL:2,rI:3},
+    {id:"R3",text:"Records are kept past their retention date because nobody owns the archive.",L:4,I:3,existing:"",opt:0,ctrl:["27001:5.9","27001:8.10"],action:"Name an information asset owner; retention check during migration; certified destruction of expired records.",owner:"DPO",due:"2027-03-31",st:"Not started",rL:2,rI:2},
+   ],
+   sign:{"DPO":["Pending",""],"Caldicott Guardian":["Pending",""],"SIRO":["Pending",""]},
+   ico:false,reviewed:"2026-09-01",next:"2026-12-01",
+   triggers:"Migration milestone completed; any change to the file server; annual DSPT review."},
+ ],
+ ai:[
+  {id:"AI-01",system:"S9",dpia:"DPIA-01",
+   ans:{purpose:"Transcribes recorded therapy sessions and drafts a session note for the therapist. Used by one therapy team.",role:"Yes. Every draft is reviewed and edited by the therapist before it is saved to the care record.",accuracy:"Monthly sample of 20 notes compared with the audio; error rate tracked. Target: no clinically significant errors.",training:"No. Contract forbids training on our data; vendor confirmed in writing (Oct 2026).",bias:"Possible lower accuracy for young children, strong accents and speech difficulties; tracked in the monthly sample.",transparency:"Families are told before recording and can say no; privacy notice and easy-read leaflet being updated.",fallback:"Therapist writes the note manually; recordings deleted after 30 days."},
+   ctrl:{"42001:A.5.2":true,"42001:A.5.4":true,"42001:A.6.2.4":true,"42001:A.6.2.6":false,"42001:A.7.4":false,"42001:A.7.5":true,"42001:A.8.2":false,"42001:A.9.2":true,"42001:A.10.3":true},
+   level:"Medium",reviewed:"2026-10-12"},
+ ],
+ incidents:[
+  {id:"INC-01",type:"Personal data breach",found:"2026-09-14T10:20",systems:["S7"],what:"Payslip emailed to the wrong member of staff.",status:"Closed",reported:"Not reportable (low risk, recalled and deleted)",lessons:"Check recipient before sending; payroll now uses the HR portal only."},
+ ],
+ aiinv:[
+  {id:"AIT-01",name:"ScribeAI session notes",ver:"2.3",use:"Transcribes therapy sessions and drafts the note",type:"Generative",dept:"care",owner:"Therapy Lead",source:"Vendor",vendorName:"ScribeAI Inc",role:"Deployer",tier:"Limited (transparency)",status:"Pilot",system:"S9",assess:"AI-01",note:"Not a medical device as configured; re-tier if it starts suggesting diagnoses."},
+  {id:"AIT-02",name:"Office AI assistant",ver:"",use:"Summarising emails and meeting notes in the office suite",type:"Generative",dept:"all",owner:"IT Manager",source:"Vendor",vendorName:"Office suite provider",role:"Deployer",tier:"Minimal",status:"Pilot",system:"",assess:"",note:"Can see anything the user can see, incl. the shared drive."},
+  {id:"AIT-03",name:"Public chatbot for letters",ver:"",use:"Staff paste case details to draft letters to families",type:"Generative",dept:"care",owner:"Unknown",source:"Public tool (personal accounts)",vendorName:"",role:"Deployer",tier:"Limited (transparency)",status:"Shadow (not approved)",system:"",assess:"",note:"Found in a staff survey, Oct 2026."},
+  {id:"AIT-04",name:"CV screening in the recruitment platform",ver:"",use:"Ranks applicants before a person reads the CV",type:"Classification",dept:"hr",owner:"HR Manager",source:"Vendor",vendorName:"Recruitment platform",role:"Deployer",tier:"High (Annex III)",status:"Requested",system:"",assess:"",note:"Employment use is high-risk under the EU AI Act; automated decision safeguards under UK GDPR / DUAA."},
+  {id:"AIT-05",name:"Donor propensity scoring",ver:"",use:"Predicts which supporters may give a larger gift",type:"Predictive",dept:"fund",owner:"Head of Fundraising",source:"Vendor",vendorName:"DonorHub",role:"Deployer",tier:"Minimal",status:"Approved",system:"S6",assess:"",note:"Profiling: covered by the LIA for RA-08 only if that LIA mentions scoring."},
+ ],
+ gap:{
+  base:"2026-04-15",
+  items:{
+   roles:{rag:"",base:"A",gaps:"",action:"",owner:"DPO",due:""},
+   policy:{rag:"G",base:"A",gaps:"",action:"Annual review due Apr 2027",owner:"DPO",due:"2027-04-30"},
+   training:{rag:"A",base:"R",gaps:"82% of staff trained; volunteers not included",action:"Add a short module for volunteers",owner:"HR Manager",due:"2026-12-31"},
+   ropa:{rag:"",base:"R",gaps:"",action:"",owner:"DPO",due:""},
+   lawful:{rag:"",base:"A",gaps:"",action:"",owner:"DPO",due:""},
+   lia:{rag:"",base:"R",gaps:"",action:"",owner:"Head of Fundraising",due:"2026-12-15"},
+   consent:{rag:"A",base:"A",gaps:"Research consent forms not in an easy-read version",action:"Easy-read consent form for children",owner:"Research Lead",due:"2026-10-31"},
+   notices:{rag:"A",base:"R",gaps:"No notice mentions AI note-taking",action:"Update the families' privacy notice and leaflet",owner:"DPO",due:"2026-12-01"},
+   dsar:{rag:"A",base:"A",gaps:"Requests tracked in email; searches miss the shared drive and paper files",action:"Use the Systems map as the search list; start a DSAR register",owner:"DPO",due:"2027-01-31"},
+   retention:{rag:"",base:"A",gaps:"",action:"",owner:"DPO",due:""},
+   processors:{rag:"",base:"R",gaps:"",action:"",owner:"DPO",due:""},
+   transfers:{rag:"",base:"A",gaps:"",action:"",owner:"DPO",due:""},
+   dpia:{rag:"",base:"R",gaps:"",action:"",owner:"DPO",due:""},
+   ai:{rag:"",base:"R",gaps:"",action:"",owner:"SIRO",due:""},
+   breach:{rag:"G",base:"A",gaps:"",action:"Table-top exercise each year",owner:"SIRO",due:"2027-03-31"},
+   security:{rag:"",base:"R",gaps:"",action:"",owner:"IT Manager",due:""},
+   minimise:{rag:"A",base:"A",gaps:"Copies of reports and EHCPs saved on the shared drive",action:"Clear-out and access review of the G: drive",owner:"IT Manager",due:"2027-02-28"},
+  }},
+ prog:[
+  {status:"Signed off",owner:"CEO",signed:"2026-04-02",notes:"Executive support letter signed."},
+  {status:"In progress",owner:"DPO",signed:"",notes:"Roles named; training 82% complete."},
+  {status:"In progress",owner:"DPO",signed:"",notes:"RoPA in place; Fundraising and HR not confirmed this year."},
+  {status:"In progress",owner:"DPO",signed:"",notes:"Notices need AI wording."},
+  {status:"Not started",owner:"DPO",signed:"",notes:""},
+  {status:"In progress",owner:"DPO",signed:"",notes:"One processor without a contract."},
+  {status:"In progress",owner:"DPO",signed:"",notes:"2 DPIAs open."},
+  {status:"Signed off",owner:"DPO",signed:"2026-07-10",notes:"Re-open: new US sub-processor."},
+  {status:"Signed off",owner:"SIRO",signed:"2026-05-20",notes:""},
+  {status:"In progress",owner:"IT Manager",signed:"",notes:"Legacy server is the main gap."},
+ ],
+ log:[
+  {d:"2026-11-02",t:"ScribeAI added a US sub-processor (speech model provider)"},
+  {d:"2026-10-12",t:"DPIA-01 approved by the DPO; Caldicott Guardian and SIRO sign-off pending"},
+  {d:"2026-09-14",t:"INC-01 logged and closed (not reportable)"},
+  {d:"2026-09-01",t:"DPIA-02 opened for the legacy therapy archive"},
+ ],
+};
+
+// ================= state =================
+const KEY = "igw-proto-v2";
+let S;
+function load(){try{const t=localStorage.getItem(KEY);S=t?JSON.parse(t):structuredClone(SEED)}catch(e){S=structuredClone(SEED)}
+ for(const k in SEED)if(!(k in S))S[k]=structuredClone(SEED[k]);}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function resetDemo(){if(!confirm("Reset all edits back to the demo data?"))return;S=structuredClone(SEED);save();go(cur)}
+function logChange(t){S.log.unshift({d:TODAY,t});S.log=S.log.slice(0,60)}
+function exportJSON(){download("ig-workspace-backup.json",JSON.stringify(S,null,2),"application/json")}
+function importJSON(inp){const f=inp.files[0];if(!f)return;f.text().then(t=>{try{const o=JSON.parse(t);if(!o.ropa||!o.systems)throw 0;S=o;save();go(cur)}catch(e){alert("That file is not a workspace backup.")}});inp.value=""}
+function download(name,text,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+
+// ================= helpers =================
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sys=id=>S.systems.find(s=>s.id===id)||{name:id,id};
+const ven=id=>S.vendors.find(v=>v.id===id);
+const dept=id=>(S.depts.find(d=>d.id===id)||{name:id}).name;
+const ra=id=>S.ropa.find(r=>r.id===id);
+const isSp=r=>r.data.some(d=>SPECIAL.includes(d));
+const isCh=r=>r.subjects.includes("Children");
+const isCr=r=>r.data.includes("Criminal offence data");
+const level=s=>s>=S.org.scoreHigh?"H":s>=S.org.scoreMed?"M":"L";
+const LN={H:"High",M:"Medium",L:"Low"};
+const lvl=s=>`<span class="lvl ${level(s)}">${s} ${LN[level(s)]}</span>`;
+const raChips=r=>(isSp(r)?'<span class="chip c-sp">Special category</span>':'')+(isCh(r)?'<span class="chip c-ch">Children</span>':'')+(isCr(r)?'<span class="chip c-cr">Criminal</span>':'');
+const sysChips=s=>(s.legacy?'<span class="chip c-leg">Legacy</span>':'')+(!s.supported?'<span class="chip c-leg">Unsupported</span>':'')+(s.paper?'<span class="chip c-n">Paper</span>':'')+(s.ai?'<span class="chip c-ai">AI</span>':'')+(["US cloud","Canada","EU cloud"].includes(s.host)?'<span class="chip c-xb">Outside UK</span>':'');
+const cref=c=>`<span class="ref" title="${esc(CONTROLS[c]?.[1]||"")}">${c.replace(":"," ")}</span>`;
+const dref=d=>`<span class="ref" title="${esc(DSPT[d]||"")}">DSPT ${d}</span>`;
+const fmt=d=>d?new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"—";
+const monthsAgo=d=>d?(new Date(TODAY)-new Date(d))/(30.4*864e5):999;
+const nextId=(arr,p)=>{let n=arr.length+1;while(arr.some(x=>x.id===p+String(n).padStart(2,"0")))n++;return p+String(n).padStart(2,"0")};
+const sysVendorChanged=(sid,since)=>{const s=sys(sid);const v=s.vendor&&ven(s.vendor);const vc=v&&v.changed&&v.changed>since;return [s.changed&&s.changed>since&&!(vc&&v.changed===s.changed)?`${s.name}: ${s.change||"changed"} (${fmt(s.changed)})`:"",vc?`${v.name}: ${v.change||"changed"} (${fmt(v.changed)})`:""].filter(Boolean)};
+
+// ================= living-record checks =================
+function issues(){
+ const out=[];
+ S.dpias.forEach(d=>{
+  d.systems.forEach(s=>sysVendorChanged(s,d.reviewed).forEach(t=>out.push({sev:"r",tab:"dpia",ref:d.id,t:`${t} after the last review on ${fmt(d.reviewed)}. Re-check the risks.`})));
+  if(d.next&&d.next<TODAY)out.push({sev:"a",tab:"dpia",ref:d.id,t:`Scheduled review was due ${fmt(d.next)}.`});
+  if(d.risks.some(r=>level(r.rL*r.rI)==="H")&&!d.ico)out.push({sev:"r",tab:"dpia",ref:d.id,t:"A high residual risk remains and the ICO has not been consulted (Article 36)."});
+  const pend=Object.entries(d.sign).filter(([k,v])=>v[0]==="Pending").map(([k])=>k);
+  if(pend.length)out.push({sev:"a",tab:"dpia",ref:d.id,t:`Sign-off pending: ${pend.join(", ")}.`});
+  d.risks.filter(r=>r.st!=="Done"&&r.due&&r.due<TODAY).forEach(r=>out.push({sev:"a",tab:"dpia",ref:d.id,t:`Action for ${r.id} is overdue (${fmt(r.due)}).`}));
+ });
+ S.ropa.forEach(r=>{
+  if(monthsAgo(r.reviewed)>12)out.push({sev:"a",tab:"ropa",ref:r.id,t:`${r.name}: not confirmed for over 12 months (last ${fmt(r.reviewed)}).`});
+  r.systems.forEach(s=>sysVendorChanged(s,r.reviewed).forEach(t=>out.push({sev:"a",tab:"ropa",ref:r.id,t:`${t}; RoPA line last confirmed ${fmt(r.reviewed)}.`})));
+  if(r.a6.includes("6(1)(f) legitimate interests")&&!r.lia)out.push({sev:"a",tab:"ropa",ref:r.id,t:`${r.name}: relies on legitimate interests but no LIA is recorded.`});
+  if(isSp(r)&&(r.a9==="n/a"||!r.a9))out.push({sev:"r",tab:"ropa",ref:r.id,t:`${r.name}: special category data with no Article 9 condition.`});
+  if(isSp(r)&&r.records>250&&!S.dpias.some(d=>d.activities.includes(r.id))&&r.systems.some(s=>sys(s).legacy||!sys(s).supported||sys(s).ai))out.push({sev:"a",tab:"ropa",ref:r.id,t:`${r.name}: special category data in a legacy or AI system with no DPIA.`});
+ });
+ S.systems.forEach(s=>{
+  const acts=S.ropa.filter(r=>r.systems.includes(s.id));
+  if(!s.supported)out.push({sev:"r",tab:"silos",ref:s.name,t:`No longer supported by the manufacturer (DSPT 8.1.4).`});
+  if(!s.audit&&acts.some(isSp))out.push({sev:"a",tab:"silos",ref:s.name,t:`Holds special category data with no audit log.`});
+  if(!acts.length)out.push({sev:"a",tab:"silos",ref:s.name,t:`Not linked to any RoPA activity.`});
+ });
+ S.vendors.forEach(v=>{
+  if(!v.dpa)out.push({sev:"r",tab:"vendors",ref:v.name,t:`No data processing agreement (Article 28).`});
+  if(v.transfer==="Other / unclear")out.push({sev:"r",tab:"vendors",ref:v.name,t:`Transfer outside the UK without a clear mechanism.`});
+  if(monthsAgo(v.lastReview)>12)out.push({sev:"a",tab:"vendors",ref:v.name,t:`Supplier review overdue (last ${fmt(v.lastReview)}).`});
+  if(v.service.toLowerCase().includes("ai")&&!v.noTrain)out.push({sev:"r",tab:"vendors",ref:v.name,t:`AI supplier may train on our data.`});
+ });
+ S.depts.forEach(d=>{if(monthsAgo(d.attested)>12)out.push({sev:"a",tab:"ropa",ref:d.name,t:`Annual department information audit not confirmed${d.attested?` since ${fmt(d.attested)}`:""}.`})});
+ S.ai.forEach(a=>{const miss=AICTRL.filter(c=>!a.ctrl[c]);if(miss.length)out.push({sev:"a",tab:"ai",ref:a.id,t:`${miss.length} ISO 42001 controls not yet in place: ${miss.map(c=>c.split(":")[1]).join(", ")}.`})});
+ S.aiinv.filter(t=>t.status!=="Retired").forEach(t=>{
+  if(t.tier==="Prohibited")out.push({sev:"r",tab:"ai",ref:t.id,t:`${t.name}: falls in a prohibited AI practice. Stop using it.`});
+  if(t.status.startsWith("Shadow"))out.push({sev:"r",tab:"ai",ref:t.id,t:`${t.name}: shadow AI, used without approval. Decide to approve and assess it, or stop it.`});
+  else if(t.tier.startsWith("High")&&!t.assess)out.push({sev:"r",tab:"ai",ref:t.id,t:`${t.name}: high-risk AI with no AI assessment; also needs automated decision safeguards.`});
+  else if(!t.assess)out.push({sev:"a",tab:"ai",ref:t.id,t:`${t.name}: no AI assessment yet.`});
+  if(!t.system&&!t.status.startsWith("Shadow"))out.push({sev:"a",tab:"ai",ref:t.id,t:`${t.name}: not in Systems & silos, so the RoPA cannot show what data it touches.`});
+ });
+ GAP.forEach(([k,area])=>{const g=S.gap.items[k]||{};const r=gapRag(k,out);if(g.due&&g.due<TODAY&&r!=="G")out.push({sev:"a",tab:"gap",ref:area,t:`Gap action overdue (${fmt(g.due)}): ${g.action||"no action written"}.`})});
+ return out;
+}
+
+// readiness assessment: what the live workspace says about each area ([rag, evidence], or null if it can't tell)
+function gapAuto(k,iss){
+ const n=(tab,sev)=>iss.filter(i=>i.tab===tab&&(!sev||i.sev===sev)).length;
+ const sp=S.ropa.filter(isSp);
+ switch(k){
+  case "roles":return S.org.dpo&&S.org.cg&&S.org.siro?["G","DPO, Caldicott Guardian and SIRO are named."]:["A","One or more key roles are not named in Settings."];
+  case "ropa":{const ok=S.depts.filter(d=>monthsAgo(d.attested)<=12).length;return [ok===S.depts.length?"G":ok?"A":"R",`${S.ropa.length} activities; ${ok}/${S.depts.length} departments confirmed in the last 12 months.`]}
+  case "lawful":{const no6=S.ropa.filter(r=>!r.a6.length),no9=sp.filter(r=>!r.a9||r.a9==="n/a");return [no6.length||no9.length?"R":"G",no6.length||no9.length?`Missing: ${[...no6,...no9].map(r=>r.id).join(", ")}.`:`Every activity has an Article 6 basis; all ${sp.length} special category activities have an Article 9 condition.`]}
+  case "lia":{const m=S.ropa.filter(r=>r.a6.includes("6(1)(f) legitimate interests")&&!r.lia);return [m.length?"A":"G",m.length?`No LIA for ${m.map(r=>r.id).join(", ")}.`:"An LIA is recorded wherever legitimate interests are used."]}
+  case "retention":{const m=S.ropa.filter(r=>!r.ret);return [m.length?"A":"G",m.length?`No retention on ${m.map(r=>r.id).join(", ")}.`:"Retention is recorded on every activity."]}
+  case "processors":{const m=S.vendors.filter(v=>!v.dpa),o=S.vendors.filter(v=>monthsAgo(v.lastReview)>12);return [m.length?"R":o.length?"A":"G",`${m.length} without an Article 28 agreement${m.length?` (${m.map(v=>v.name).join(", ")})`:""}; ${o.length} reviews overdue.`]}
+  case "transfers":{const x=S.vendors.filter(v=>v.transfer!=="None (UK only)"),u=x.filter(v=>v.transfer==="Other / unclear");return [u.length?"R":"G",`${x.length} suppliers process data outside the UK; ${u.length} without a clear mechanism.`]}
+  case "dpia":return [n("dpia","r")?"R":n("dpia")?"A":"G",`${S.dpias.length} DPIAs; ${n("dpia","r")} urgent and ${n("dpia","a")} other open points.`];
+  case "ai":{const sh=S.aiinv.filter(t=>t.status.startsWith("Shadow")).length;return [n("ai","r")?"R":n("ai")?"A":"G",`${S.aiinv.length} AI tools in the inventory (${sh} shadow); ${n("ai","r")} urgent points.`]}
+  case "breach":return [S.org.siro?"G":"A",`Breach assessment and log in use; ${S.incidents.length} incidents logged.`];
+  case "security":{const u=S.systems.filter(s=>!s.supported),a=S.systems.filter(s=>!s.audit&&S.ropa.some(r=>r.systems.includes(s.id)&&isSp(r)));return [u.length?"R":a.length?"A":"G",`${u.length} unsupported systems; ${a.length} holding special category data without an audit log.`]}
+ }
+ return null;
+}
+// a rating typed by the assessor wins; otherwise use the workspace check
+function gapRag(k,iss){const g=S.gap.items[k]||{};if(g.rag)return g.rag;const a=gapAuto(k,iss);return a?a[0]:"A"}
+
+// ================= generic form dialog =================
+const dlg=$("#dlg");
+function field(f,v){
+ const id="f_"+f.k;
+ if(f.type==="textarea")return `<div class="fld"><label>${f.l}</label><textarea id="${id}">${esc(v)}</textarea></div>`;
+ if(f.type==="select")return `<div class="fld"><label>${f.l}</label><select id="${id}">${f.o.map(o=>{const [val,lab]=Array.isArray(o)?o:[o,o];return `<option value="${esc(val)}" ${val===v?"selected":""}>${esc(lab)}</option>`}).join("")}</select></div>`;
+ if(f.type==="multi")return `<div class="fld"><label>${f.l}</label><div class="multi" id="${id}">${f.o.map(o=>{const [val,lab]=Array.isArray(o)?o:[o,o];return `<label><input type="checkbox" value="${esc(val)}" ${(v||[]).includes(val)?"checked":""}>${esc(lab)}</label>`}).join("")}</div></div>`;
+ if(f.type==="bool")return `<div class="fld"><label><input type="checkbox" id="${id}" ${v?"checked":""}> ${f.l}</label></div>`;
+ return `<div class="fld"><label>${f.l}</label><input type="${f.type||"text"}" id="${id}" value="${esc(v)}"></div>`;
+}
+function readField(f){
+ const el=$("#f_"+f.k);
+ if(f.type==="multi")return [...el.querySelectorAll("input:checked")].map(i=>i.value);
+ if(f.type==="bool")return el.checked;
+ if(f.type==="number")return +el.value||0;
+ return el.value.trim();
+}
+function openForm(title,fields,obj,onSave,onDel){
+ $("#dlgBody").innerHTML=`<h2 style="margin-bottom:12px">${esc(title)}</h2><div class="f2">${fields.map(f=>`<div style="${f.wide?"grid-column:1/-1":""}">${field(f,obj[f.k])}</div>`).join("")}</div>`;
+ $("#dlgDel").innerHTML=onDel?`<button class="btn r" type="button" id="dlgDelBtn">Delete</button>`:"";
+ if(onDel)$("#dlgDelBtn").onclick=()=>{if(confirm("Delete this item?")){onDel();save();dlg.close();go(cur)}};
+ $("#dlgSave").onclick=()=>{const o={...obj};fields.forEach(f=>o[f.k]=readField(f));onSave(o);save();dlg.close();go(cur)};
+ dlg.showModal();
+}
+const F={
+ ropa:()=>[
+  {k:"name",l:"Processing activity",wide:true},{k:"dept",l:"Department",type:"select",o:S.depts.map(d=>[d.id,d.name])},{k:"owner",l:"Information asset owner"},
+  {k:"subjects",l:"Data subjects",type:"multi",o:SUBJECTS,wide:true},{k:"data",l:"Personal data (special category is detected automatically)",type:"multi",o:DATA_CATS,wide:true},
+  {k:"a6",l:"Article 6 lawful basis",type:"multi",o:ART6,wide:true},{k:"a9",l:"Article 9 condition",type:"select",o:ART9},{k:"cond",l:"DPA 2018 Schedule 1 / Article 10 condition"},
+  {k:"lia",l:"Legitimate interests assessment completed",type:"bool"},{k:"ndo",l:"National data opt-out",type:"select",o:NDO},
+  {k:"recip",l:"Recipients",wide:true},{k:"systems",l:"Systems where the data is held",type:"multi",o:S.systems.map(s=>[s.id,s.name]),wide:true},
+  {k:"ret",l:"Retention"},{k:"records",l:"Approx. number of people",type:"number"},{k:"reviewed",l:"Last confirmed by owner",type:"date"}],
+ sys:()=>[
+  {k:"name",l:"System or store"},{k:"kind",l:"What it is"},{k:"host",l:"Where it is hosted",type:"select",o:HOSTS},{k:"owner",l:"Owner"},
+  {k:"depts",l:"Departments using it",type:"multi",o:S.depts.map(d=>[d.id,d.name]),wide:true},{k:"vendor",l:"Supplier",type:"select",o:[["","None / in-house"],...S.vendors.map(v=>[v.id,v.name])]},
+  {k:"legacy",l:"Legacy or unstructured",type:"bool"},{k:"supported",l:"Supported by the manufacturer",type:"bool"},{k:"paper",l:"Paper records",type:"bool"},{k:"ai",l:"Uses AI",type:"bool"},{k:"audit",l:"Has an audit log",type:"bool"},
+  {k:"changed",l:"Date of last change",type:"date"},{k:"change",l:"What changed",wide:true}],
+ ven:()=>[
+  {k:"name",l:"Supplier"},{k:"service",l:"Service"},{k:"role",l:"Role",type:"select",o:["Processor","Sub-processor","Joint controller","Independent controller"]},{k:"location",l:"Where data is processed"},
+  {k:"transfer",l:"Transfer mechanism",type:"select",o:TRANSFER},{k:"dpa",l:"Data processing agreement in place",type:"bool"},
+  {k:"certs",l:"Certifications",type:"multi",o:CERTS,wide:true},{k:"sub",l:"Sub-processors",wide:true},{k:"noTrain",l:"Contract forbids training AI on our data",type:"bool"},
+  {k:"lastReview",l:"Last supplier review",type:"date"},{k:"changed",l:"Date of last change",type:"date"},{k:"change",l:"What changed",wide:true}],
+ inv:()=>[
+  {k:"name",l:"AI tool or model"},{k:"ver",l:"Version"},{k:"use",l:"Use case",wide:true},
+  {k:"type",l:"Type",type:"select",o:["Generative","Predictive","Classification","Other"]},{k:"dept",l:"Department",type:"select",o:[["all","All departments"],...S.depts.map(d=>[d.id,d.name])]},
+  {k:"owner",l:"Owner"},{k:"source",l:"Source",type:"select",o:["Vendor","In-house","Public tool (personal accounts)"]},{k:"vendorName",l:"Vendor"},
+  {k:"role",l:"EU AI Act role",type:"select",o:["Deployer","Provider","Importer / distributor"]},{k:"tier",l:"EU AI Act risk tier",type:"select",o:AITIER},
+  {k:"status",l:"Status",type:"select",o:AISTATUS},{k:"system",l:"System record",type:"select",o:[["","Not in Systems yet"],...S.systems.map(s=>[s.id,s.name])]},
+  {k:"assess",l:"AI assessment",type:"select",o:[["","None yet"],...S.ai.map(a=>[a.id,a.id])]},{k:"note",l:"Notes",type:"textarea",wide:true}],
+};
+
+// ================= tabs =================
+const TABS=[["overview","Overview"],["gap","Gap assessment"],["prog","Programme"],["ropa","RoPA"],["silos","Systems & silos"],["vendors","Suppliers"],["dpia","DPIAs"],["ai","AI inventory & risk"],["breach","Breaches"],["controls","Controls"],["dspt","DSPT evidence"],["law","UK / EU / DUAA"],["settings","Settings"]];
+let cur="overview";
+function go(t){
+ cur=t;const iss=issues();const cnt=k=>iss.filter(i=>i.tab===k).length;
+ $("#tabs").innerHTML=TABS.map(([k,l])=>`<button class="${k===cur?"on":""}" onclick="go('${k}')">${l}${cnt(k)?`<span class="n">${cnt(k)}</span>`:""}</button>`).join("");
+ $("#orgline").textContent=`${S.org.name} (fictional) · ${S.org.type}. RoPA, systems, suppliers, DPIAs, AI assessments and incidents are linked, so a change in one place flags what needs review everywhere else.`;
+ $("#view").innerHTML=V[t](iss);
+}
+
+const V={};
+
+V.overview=iss=>{
+ const sp=S.ropa.filter(isSp).length,ch=S.ropa.filter(isCh).length;
+ const leg=S.systems.filter(s=>s.legacy||!s.supported||s.paper).length;
+ const open=S.dpias.flatMap(d=>d.risks).filter(r=>r.st!=="Done").length;
+ const red=iss.filter(i=>i.sev==="r");
+ return `<div class="kpis">
+  <div class="kpi"><b>${S.ropa.length}</b><span>processing activities in ${S.depts.length} departments</span></div>
+  <div class="kpi"><b>${sp}</b><span>with special category data (${ch} with children)</span></div>
+  <div class="kpi"><b>${S.systems.length}</b><span>systems; ${leg} legacy, paper or unsupported</span></div>
+  <div class="kpi"><b>${S.vendors.length}</b><span>suppliers tracked</span></div>
+  <div class="kpi"><b>${open}</b><span>open DPIA actions</span></div>
+  <div class="kpi" style="cursor:pointer" onclick="go('gap')"><b>${GAP.filter(([k])=>gapRag(k,iss)==="G").length}/${GAP.length}</b><span>readiness areas green</span></div>
+  <div class="kpi" style="cursor:pointer" onclick="go('ai')"><b>${S.aiinv.length}</b><span>AI tools; ${S.aiinv.filter(t=>t.status.startsWith("Shadow")).length} shadow, ${S.aiinv.filter(t=>t.tier.startsWith("High")).length} high-risk</span></div></div>
+ <div class="grid2" style="margin-top:14px">
+  <div class="card"><h2>Needs attention</h2><p class="sub">${red.length} urgent, ${iss.length-red.length} to plan. Generated from the links between records; edit anything and this list updates.</p>
+   ${iss.slice().sort((a,b)=>a.sev<b.sev?1:-1).map(i=>`<div class="alert ${i.sev}" style="cursor:pointer" onclick="go('${i.tab}')"><b>${esc(i.ref)}</b><span>${esc(i.t)}</span></div>`).join("")||'<div class="alert g">Nothing outstanding.</div>'}
+  </div>
+  <div><div class="card"><h2>Department information audits</h2><p class="sub">Each owner confirms their part of the RoPA every year, ready for the DSPT submission.</p>
+   <table><tr><th>Department</th><th>Owner</th><th>Activities</th><th>Last confirmed</th><th></th></tr>
+   ${S.depts.map(d=>`<tr><td><b>${esc(d.name)}</b></td><td>${esc(d.owner)}</td><td>${S.ropa.filter(r=>r.dept===d.id).length}</td><td>${d.attested?fmt(d.attested):'<span class="chip c-sp">Not confirmed</span>'} ${d.attested&&monthsAgo(d.attested)>12?'<span class="chip c-leg">Overdue</span>':""}</td><td><button class="btn s g" onclick="attest('${d.id}')">Confirm now</button></td></tr>`).join("")}
+   </table></div>
+   <div class="card"><h2>Recent changes</h2>${S.log.slice(0,8).map(l=>`<div style="padding:5px 0;border-top:1px solid var(--line)"><span class="muted">${fmt(l.d)}</span> · ${esc(l.t)}</div>`).join("")}</div>
+  </div></div>`;
+};
+// ---------- readiness (gap) assessment ----------
+const ragChip=r=>`<span class="chip ${{R:"c-sp",A:"c-leg",G:"c-ok"}[r]||"c-n"}">${RAGN[r]||"Not rated"}</span>`;
+const ragBar=(rs,label)=>{const c=k=>rs.filter(r=>r===k).length;return `<div style="margin:6px 0 10px"><div class="muted" style="font-size:12px;margin-bottom:3px">${label}: ${c("G")} green, ${c("A")} amber, ${c("R")} red</div><div style="display:flex;height:14px;border-radius:7px;overflow:hidden;background:#f1f5f9">${["G","A","R"].map(k=>`<div style="width:${100*c(k)/rs.length}%;background:var(--${{G:"ok",A:"warn",R:"bad"}[k]})"></div>`).join("")}</div></div>`};
+V.gap=iss=>{
+ const it=k=>S.gap.items[k]||(S.gap.items[k]={rag:"",base:"",gaps:"",action:"",owner:"",due:""});
+ const now=GAP.map(([k])=>gapRag(k,iss)),base=GAP.map(([k])=>it(k).base).filter(Boolean);
+ const pct=Math.round(100*now.filter(r=>r==="G").length/now.length);
+ return `<div class="grid2"><div class="card"><h2>Readiness (gap) assessment</h2>
+  <p class="sub">The first step of a GDPR / DSPT programme: rate each area Red, Amber or Green, write the gaps and actions, then re-run the same assessment to show progress. Where the workspace can check an area itself, it rates it from the live data; the assessor can override.</p>
+  <div class="kpis" style="grid-template-columns:repeat(3,1fr)"><div class="kpi"><b>${pct}%</b><span>areas green now</span></div><div class="kpi"><b>${now.filter(r=>r==="R").length}</b><span>red areas</span></div><div class="kpi"><b>${GAP.filter(([k])=>gapAuto(k,iss)).length}/${GAP.length}</b><span>checked automatically</span></div></div></div>
+ <div class="card"><h2>Progress since the baseline</h2><p class="sub">Baseline taken ${fmt(S.gap.base)}. Save a new baseline at the start of each annual cycle (e.g. after the DSPT submission).</p>
+  ${base.length?ragBar(base,"Baseline"):""}${ragBar(now,"Now")}
+  <div class="btns"><button class="btn g" onclick="gapBaseline()">Save today as the new baseline</button><button class="btn g" onclick="gapCSV()">Export CSV</button></div></div></div>
+ <div class="card"><div class="scroll"><table class="rk"><tr><th>Area</th><th>Requirement</th><th>Workspace check</th><th>Rating</th><th>Baseline</th><th>Gaps</th><th>Actions</th><th>Owner</th><th>Due</th></tr>
+ ${GAP.map(([k,area,req,law,st])=>{const g=it(k),a=gapAuto(k,iss),r=gapRag(k,iss);return `<tr><td><b>${esc(area)}</b><br><span class="ref">${esc(law)}</span><span class="ref" style="cursor:pointer" onclick="go('prog')">Stage ${st}</span></td><td style="min-width:170px">${esc(req)}</td>
+  <td style="min-width:180px">${a?`${ragChip(a[0])}<br><span class="muted" style="font-size:12px">${esc(a[1])}</span>`:'<span class="muted" style="font-size:12px">Manual: rate from interviews and evidence</span>'}</td>
+  <td>${ragChip(r)}<br><select style="margin-top:4px" onchange="S.gap.items['${k}'].rag=this.value;save();go('gap')"><option value="" ${g.rag?"":"selected"}>${a?"Use check":"Not rated"}</option>${["R","A","G"].map(x=>`<option value="${x}" ${g.rag===x?"selected":""}>${RAGN[x]}</option>`).join("")}</select></td>
+  <td>${g.base?ragChip(g.base):"—"}</td>
+  <td><textarea onchange="S.gap.items['${k}'].gaps=this.value;save()">${esc(g.gaps)}</textarea></td><td><textarea onchange="S.gap.items['${k}'].action=this.value;save()">${esc(g.action)}</textarea></td>
+  <td><input value="${esc(g.owner)}" style="width:110px" onchange="S.gap.items['${k}'].owner=this.value;save()"></td><td><input type="date" value="${esc(g.due)}" onchange="S.gap.items['${k}'].due=this.value;save();go('gap')"></td></tr>`}).join("")}
+ </table></div></div>`;
+};
+function gapBaseline(){if(!confirm("Replace the baseline with today's ratings?"))return;const iss=issues();GAP.forEach(([k])=>{S.gap.items[k].base=gapRag(k,iss)});S.gap.base=TODAY;logChange("New gap assessment baseline saved");save();go("gap")}
+function gapCSV(){const iss=issues();const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;const rows=GAP.map(([k,area,req,law,st])=>{const g=S.gap.items[k],a=gapAuto(k,iss);return [area,req,law,st,RAGN[gapRag(k,iss)],RAGN[g.base]||"",a?a[1]:"",g.gaps,g.action,g.owner,g.due].map(q).join(",")});download("gap-assessment.csv",[["Area","Requirement","Law","Stage","Rating","Baseline","Workspace check","Gaps","Actions","Owner","Due"].map(q).join(","),...rows].join("\n"),"text/csv")}
+
+// ---------- programme ----------
+V.prog=iss=>{
+ const done=S.prog.filter(p=>p.status==="Signed off").length;
+ return `<div class="card"><h2>Implementation programme: 10 stages</h2><p class="sub">The end-to-end project, stage by stage. Each stage shows the readiness areas it fixes and links to where the work is done. When all 10 are signed off, re-run the gap assessment to measure maturity.</p>
+ <div class="steps">${S.prog.map((p,i)=>`<span class="step ${p.status==="Signed off"?"done":p.status==="In progress"?"now":""}">${i+1}</span>`).join("")}<span class="muted" style="align-self:center;font-size:12.5px">${done}/10 signed off</span></div>
+ <div class="scroll"><table class="rk"><tr><th>#</th><th>Stage</th><th>Readiness areas</th><th>Status</th><th>Owner</th><th>Signed off</th><th>Notes</th></tr>
+ ${STAGES.map(([n,name,tab],i)=>{const p=S.prog[i];const areas=GAP.filter(g=>g[4]===n);return `<tr><td><b>${n}</b></td><td style="min-width:200px"><b>${esc(name)}</b>${tab?`<br><button class="btn s g" style="margin-top:4px" onclick="go('${tab}')">Open ${esc(TABS.find(t=>t[0]===tab)[1])}</button>`:""}</td>
+  <td>${areas.map(g=>`<div style="white-space:nowrap">${ragChip(gapRag(g[0],iss))} ${esc(g[1])}</div>`).join("")||'<span class="muted">—</span>'}</td>
+  <td><select onchange="progSet(${i},this.value)">${["Not started","In progress","Signed off"].map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join("")}</select></td>
+  <td><input value="${esc(p.owner)}" style="width:100px" onchange="S.prog[${i}].owner=this.value;save()"></td><td>${p.signed?fmt(p.signed):"—"}</td>
+  <td><textarea onchange="S.prog[${i}].notes=this.value;save()">${esc(p.notes)}</textarea></td></tr>`}).join("")}
+ </table></div></div>`;
+};
+function progSet(i,v){const p=S.prog[i];p.status=v;p.signed=v==="Signed off"?TODAY:"";if(v==="Signed off")logChange(`Programme stage ${i+1} signed off`);save();go("prog")}
+
+function attest(id){const d=S.depts.find(x=>x.id===id);d.attested=TODAY;S.ropa.filter(r=>r.dept===id).forEach(r=>r.reviewed=TODAY);logChange(`${d.name} confirmed its RoPA entries`);save();go(cur)}
+
+let ropaDept="all";
+V.ropa=()=>{
+ const rows=S.ropa.filter(r=>ropaDept==="all"||r.dept===ropaDept);
+ return `<div class="card"><div class="hd"><div><h2>Record of processing activities (Article 30)</h2>
+  <p class="sub">By department, with the Article 6 basis, Article 9 / Schedule 1 condition, national data opt-out and the systems where the data actually lives. Click a row to edit.</p></div>
+  <div class="btns"><select onchange="ropaDept=this.value;go('ropa')"><option value="all">All departments</option>${S.depts.map(d=>`<option value="${d.id}" ${d.id===ropaDept?"selected":""}>${esc(d.name)}</option>`).join("")}</select>
+  <button class="btn g" onclick="exportRopa()">Export CSV</button><button class="btn" onclick="editRopa()">Add activity</button></div></div>
+ <div class="scroll"><table><tr><th>Ref</th><th>Activity</th><th>Data subjects</th><th>Personal data</th><th>Article 6</th><th>Article 9 / 10</th><th>NDO</th><th>Recipients</th><th>Systems</th><th>Retention</th><th>Confirmed</th></tr>
+ ${rows.map(r=>{const dp=S.dpias.filter(d=>d.activities.includes(r.id));return `<tr class="click" onclick="editRopa('${r.id}')"><td><b>${r.id}</b>${dp.map(d=>`<br><span class="ref">${d.id}</span>`).join("")}</td>
+  <td><span class="muted" style="font-size:12px">${esc(dept(r.dept))}</span><br><b>${esc(r.name)}</b><br>${raChips(r)}</td>
+  <td>${esc(r.subjects.join(", "))}</td><td>${esc(r.data.join(", "))}</td><td>${esc(r.a6.join("; "))}${r.a6.includes("6(1)(f) legitimate interests")?(r.lia?' <span class="chip c-ok">LIA</span>':' <span class="chip c-leg">No LIA</span>'):""}</td>
+  <td>${esc(r.a9)}${r.cond?`<br><span class="muted">${esc(r.cond)}</span>`:""}</td><td>${esc(r.ndo)}</td><td>${esc(r.recip)}</td>
+  <td>${r.systems.map(s=>`<span class="chip c-n">${esc(sys(s).name)}</span>`).join("")}</td><td>${esc(r.ret)}</td><td>${fmt(r.reviewed)}</td></tr>`}).join("")}
+ </table></div></div>`;
+};
+function editRopa(id){
+ const r=id?ra(id):{id:nextId(S.ropa,"RA-"),dept:S.depts[0].id,name:"",owner:"",subjects:[],data:[],a6:[],a9:"n/a",cond:"",lia:false,ndo:"n/a",recip:"",systems:[],ret:"",records:0,reviewed:TODAY};
+ openForm(id?`Edit ${id}`:"New processing activity",F.ropa(),r,o=>{if(id)Object.assign(r,o);else S.ropa.push(o);logChange(`${o.id} ${id?"updated":"added"}: ${o.name}`)},id?()=>{S.ropa=S.ropa.filter(x=>x.id!==id)}:null);
+}
+function exportRopa(){
+ const cols=["Ref","Department","Activity","Owner","Controller","DPO","Data subjects","Personal data","Special category","Children","Criminal offence data","Article 6","Article 9","Schedule 1 / Art 10 condition","National data opt-out","Recipients","Transfers outside UK","Systems","Retention","Security measures","Last confirmed"];
+ const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+ const rows=S.ropa.map(r=>{const sx=r.systems.map(sys);const tr=[...new Set(sx.map(s=>s.vendor&&ven(s.vendor)).filter(v=>v&&v.transfer!=="None (UK only)").map(v=>`${v.location} (${v.transfer})`))];
+  return [r.id,dept(r.dept),r.name,r.owner,S.org.name,S.org.dpo,r.subjects.join("; "),r.data.join("; "),isSp(r)?"Yes":"No",isCh(r)?"Yes":"No",isCr(r)?"Yes":"No",r.a6.join("; "),r.a9,r.cond,r.ndo,r.recip,tr.join("; ")||"None",sx.map(s=>s.name).join("; "),r.ret,sx.map(s=>`${s.name}: ${s.audit?"audit log":"no audit log"}`).join("; "),r.reviewed].map(q).join(",")});
+ download("ropa-article-30.csv",[cols.map(q).join(","),...rows].join("\n"),"text/csv");
+}
+
+V.silos=()=>{
+ const cats=["Health","Mental health","Therapy notes","Safeguarding","Criminal offence data","Education","Financial"];
+ const has=(s,c)=>S.ropa.some(r=>r.systems.includes(s.id)&&r.data.includes(c));
+ const dup=cats.map(c=>[c,S.systems.filter(s=>has(s,c))]).filter(([c,l])=>l.length>1);
+ return `<div class="card"><div class="hd"><div><h2>Systems and information silos</h2><p class="sub">Every place personal data is held, including legacy, paper and unstructured stores. Click a card to edit; record a change and the linked RoPA lines and DPIAs are flagged for review.</p></div><button class="btn" onclick="editSys()">Add system</button></div>
+ <div class="sys">${S.systems.map(s=>{const acts=S.ropa.filter(r=>r.systems.includes(s.id));const v=s.vendor&&ven(s.vendor);return `<div class="syscard" onclick="editSys('${s.id}')">
+  <h4>${esc(s.name)}</h4><p>${esc(s.kind)} · ${esc(s.host)}${v?` · ${esc(v.name)}`:""}</p>
+  <div>${sysChips(s)}${s.audit?'<span class="chip c-ok">Audit log</span>':'<span class="chip c-sp">No audit log</span>'}</div>
+  <p style="margin-top:6px">Owner: ${esc(s.owner)}<br>${esc(s.depts.map(dept).join(", "))}</p>${s.change?`<p>${s.changed?fmt(s.changed)+": ":""}${esc(s.change)}</p>`:""}
+  <div>${acts.map(a=>`<span class="ref">${a.id}</span>`).join("")}</div></div>`}).join("")}</div></div>
+ <div class="grid2"><div class="card"><h2>Where sensitive data lives</h2><p class="sub">A dot means at least one RoPA activity keeps that data in that system.</p>
+  <div class="scroll"><table class="matrix"><tr><th>System</th>${cats.map(c=>`<th style="text-align:center">${c}</th>`).join("")}</tr>
+  ${S.systems.map(s=>`<tr><td>${esc(s.name)}</td>${cats.map(c=>`<td>${has(s,c)?'<span class="dot"></span>':""}</td>`).join("")}</tr>`).join("")}</table></div></div>
+ <div class="card"><h2>Same data in several places</h2><p class="sub">Each extra copy is another place to secure, keep accurate, search for a subject access request and check after a breach.</p>
+  ${dup.map(([c,l])=>`<div class="alert ${l.some(s=>s.legacy||!s.audit)?"a":"g"}"><b>${c}</b><span>${l.length} places: ${l.map(s=>esc(s.name)).join(", ")}</span></div>`).join("")}</div></div>`;
+};
+function editSys(id){
+ const s=id?sys(id):{id:nextId(S.systems,"S"),name:"",kind:"",host:"UK cloud",depts:[],owner:"",vendor:"",legacy:false,supported:true,paper:false,ai:false,audit:true,changed:"",change:""};
+ openForm(id?`Edit ${s.name}`:"New system",F.sys(),s,o=>{if(id)Object.assign(s,o);else S.systems.push(o);logChange(`System ${o.name} ${id?"updated":"added"}${o.change&&o.changed===TODAY?`: ${o.change}`:""}`)},id?()=>{S.systems=S.systems.filter(x=>x.id!==id);S.ropa.forEach(r=>r.systems=r.systems.filter(x=>x!==id))}:null);
+}
+
+V.vendors=()=>`<div class="card"><div class="hd"><div><h2>Suppliers and processors (Article 28)</h2><p class="sub">Continuous compliance across processors: contract, location, transfer mechanism, certifications, sub-processors and review dates. A change here flags every DPIA that uses the supplier.</p></div><button class="btn" onclick="editVen()">Add supplier</button></div>
+ <div class="scroll"><table><tr><th>Supplier</th><th>Service</th><th>Location / transfer</th><th>DPA</th><th>Certifications</th><th>Sub-processors</th><th>AI training</th><th>Systems</th><th>Last review</th><th>Last change</th></tr>
+ ${S.vendors.map(v=>{const ss=S.systems.filter(s=>s.vendor===v.id);return `<tr class="click" onclick="editVen('${v.id}')"><td><b>${esc(v.name)}</b><br><span class="muted">${esc(v.role)}</span></td><td>${esc(v.service)}</td>
+  <td>${esc(v.location)}<br><span class="${v.transfer==="Other / unclear"?"chip c-sp":"muted"}">${esc(v.transfer)}</span></td><td>${v.dpa?'<span class="chip c-ok">Yes</span>':'<span class="chip c-sp">Missing</span>'}</td>
+  <td>${v.certs.map(c=>`<span class="chip c-n">${c}</span>`).join("")||'<span class="muted">None recorded</span>'}</td><td>${esc(v.sub)}</td>
+  <td>${v.noTrain?'<span class="chip c-ok">Forbidden</span>':'<span class="chip c-leg">Not covered</span>'}</td><td>${ss.map(s=>`<span class="chip c-n">${esc(s.name)}</span>`).join("")}</td>
+  <td>${fmt(v.lastReview)}${monthsAgo(v.lastReview)>12?' <span class="chip c-leg">Overdue</span>':""}</td><td>${v.changed?`${fmt(v.changed)}<br><span class="muted">${esc(v.change)}</span>`:"—"}</td></tr>`}).join("")}
+ </table></div></div>`;
+function editVen(id){
+ const v=id?ven(id):{id:nextId(S.vendors,"V"),name:"",service:"",role:"Processor",location:"UK",transfer:"None (UK only)",dpa:false,certs:[],sub:"",noTrain:false,lastReview:"",changed:"",change:""};
+ openForm(id?`Edit ${v.name}`:"New supplier",F.ven(),v,o=>{if(id)Object.assign(v,o);else S.vendors.push(o);logChange(`Supplier ${o.name} ${id?"updated":"added"}${o.change&&o.changed===TODAY?`: ${o.change}`:""}`)},id?()=>{S.vendors=S.vendors.filter(x=>x.id!==id);S.systems.forEach(s=>{if(s.vendor===id)s.vendor=""})}:null);
+}
+
+// ---------- DPIA ----------
+let dIdx=0;
+const STEPS=["Screening","Describe processing","Identify risks","Score","Controls & treatment","Residual risk","Sign-off","Monitor & review"];
+function dpStage(d){if(!d.screen.length)return 0;if(!d.purpose)return 1;if(!d.risks.length)return 2;if(d.risks.some(r=>!r.ctrl.length&&r.opt===0))return 4;if(Object.values(d.sign).some(v=>v[0]==="Pending"))return 6;return 7}
+V.dpia=()=>{
+ if(!S.dpias.length)return `<div class="card"><button class="btn" onclick="newDpia()">Start a DPIA</button></div>`;
+ dIdx=Math.min(dIdx,S.dpias.length-1);const d=S.dpias[dIdx];const st=dpStage(d);
+ const opts=(n)=>[1,2,3,4,5].map(v=>`<option ${v===n?"selected":""}>${v}</option>`).join("");
+ const resHigh=d.risks.some(r=>level(r.rL*r.rI)==="H");
+ const needed=d.screen.length>=2;
+ const changes=d.systems.flatMap(s=>sysVendorChanged(s,d.reviewed));
+ const acts=d.activities.map(ra).filter(Boolean);
+ const ctrlOpts=Object.keys(CONTROLS);
+ return `<div class="dpsel">${S.dpias.map((x,i)=>`<button class="${i===dIdx?"on":""}" onclick="dIdx=${i};go('dpia')">${x.id}: ${esc(x.title)}</button>`).join("")}<button onclick="newDpia()">+ New DPIA</button></div>
+ <div class="card"><div class="hd"><div><h2>${d.id}: <input value="${esc(d.title)}" style="font-size:16px;font-weight:700;width:min(520px,80vw)" onchange="D().title=this.value;sv()"></h2>
+  <p class="sub">Owner <input value="${esc(d.owner)}" onchange="D().owner=this.value;sv()"> · status <b>${esc(d.status)}</b> · last reviewed ${fmt(d.reviewed)} · next review ${fmt(d.next)}</p></div>
+  <div class="btns"><button class="btn g" onclick="markReviewed()">Mark reviewed today</button><button class="btn" onclick="dpiaReport()">DPIA report</button></div></div>
+  <div class="steps">${STEPS.map((s,i)=>`<span class="step ${i<st?"done":i===st?"now":""}">${i+1}. ${s}</span>`).join("")}</div>
+  ${changes.map(c=>`<div class="alert r"><b>Review needed</b><span>${esc(c)} after the last review.</span></div>`).join("")}
+
+  <h3>1. Screening</h3><p class="sub">Two or more of these usually means a DPIA is required (ICO and EDPB criteria, UK GDPR Article 35).</p>
+  <div class="grid2">${[SCREEN.slice(0,5),SCREEN.slice(5)].map((half,h)=>`<div>${half.map((q,j)=>{const i=h*5+j;return `<label class="chk"><input type="checkbox" ${d.screen.includes(i)?"checked":""} onchange="togScreen(${i})"><span>${q}</span></label>`}).join("")}</div>`).join("")}</div>
+  <div class="verdict ${needed?"v-r":"v-g"}">${needed?`DPIA required: ${d.screen.length} criteria met`:"A DPIA may not be required: record the reasons"}</div>
+
+  <h3>2. Describe the processing</h3>
+  <p>Linked RoPA activities: ${acts.map(r=>`<span class="ref">${r.id}</span> ${esc(r.name)} ${raChips(r)}`).join("<br>")||"none"}
+   <br><select onchange="linkAct(this.value);this.value=''"><option value="">+ link a RoPA activity</option>${S.ropa.filter(r=>!d.activities.includes(r.id)).map(r=>`<option value="${r.id}">${r.id} ${esc(r.name)}</option>`).join("")}</select>
+   Systems: ${d.systems.map(s=>`<span class="chip c-n">${esc(sys(s).name)}</span>`).join("")}
+   <select onchange="linkSys(this.value);this.value=''"><option value="">+ link a system</option>${S.systems.filter(s=>!d.systems.includes(s.id)).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></p>
+  <div class="f2">${[["scope","Scope (sites, teams, systems)"],["purpose","Purpose and expected benefits"],["necessity","Necessity and proportionality (why this data, why this way, less intrusive options)"],["source","How the data is obtained"],["storage","Where and how it is stored"],["access","Who can access it"],["transfers","Transfers outside the UK"],["future","Possible future uses"]].map(([k,l])=>`<div class="fld"><label>${l}</label><textarea onchange="D().${k}=this.value;sv()">${esc(d[k])}</textarea></div>`).join("")}</div>
+
+  <h3>3-6. Risks to individuals, controls and residual risk</h3>
+  <p class="sub">Likelihood × impact, 1-5 each. High ${S.org.scoreHigh}+, Medium ${S.org.scoreMed}-${S.org.scoreHigh-1}, Low below ${S.org.scoreMed}. Controls: ISO/IEC 27001:2022 Annex A, plus ISO/IEC 42001:2023 for AI.</p>
+  <div class="scroll"><table class="rk"><tr><th style="min-width:200px">Risk</th><th>L</th><th>I</th><th>Inherent</th><th style="min-width:150px">Treatment</th><th style="min-width:170px">Controls</th><th style="min-width:190px">Action</th><th>Owner / due / status</th><th>Res. L</th><th>Res. I</th><th>Residual</th><th></th></tr>
+  ${d.risks.map((r,i)=>`<tr><td><b>${r.id}</b><textarea onchange="R(${i}).text=this.value;sv()">${esc(r.text)}</textarea><span class="muted">Existing: </span><input value="${esc(r.existing)}" style="width:100%" onchange="R(${i}).existing=this.value;sv()"></td>
+   <td><select onchange="R(${i}).L=+this.value;sv(1)">${opts(r.L)}</select></td><td><select onchange="R(${i}).I=+this.value;sv(1)">${opts(r.I)}</select></td><td>${lvl(r.L*r.I)}</td>
+   <td><select onchange="R(${i}).opt=+this.value;sv(1)">${TREAT.map((t,j)=>`<option value="${j}" ${j===r.opt?"selected":""}>${t}</option>`).join("")}</select></td>
+   <td>${r.ctrl.map(c=>`<span onclick="rmCtrl(${i},'${c}')" style="cursor:pointer" title="Click to remove">${cref(c)}</span>`).join("")}<br><select onchange="addCtrl(${i},this.value)"><option value="">+ control</option>${ctrlOpts.filter(c=>!r.ctrl.includes(c)).map(c=>`<option value="${c}">${c.replace(":"," ")} ${esc(CONTROLS[c][1])}</option>`).join("")}</select></td>
+   <td><textarea onchange="R(${i}).action=this.value;sv()">${esc(r.action)}</textarea></td>
+   <td><input value="${esc(r.owner)}" style="width:110px" onchange="R(${i}).owner=this.value;sv()"><br><input type="date" value="${r.due}" onchange="R(${i}).due=this.value;sv(1)"><br><select onchange="R(${i}).st=this.value;sv(1)">${RSTAT.map(s=>`<option ${s===r.st?"selected":""}>${s}</option>`).join("")}</select></td>
+   <td><select onchange="R(${i}).rL=+this.value;sv(1)">${opts(r.rL)}</select></td><td><select onchange="R(${i}).rI=+this.value;sv(1)">${opts(r.rI)}</select></td><td>${lvl(r.rL*r.rI)}</td>
+   <td><button class="btn s g" onclick="delRisk(${i})">✕</button></td></tr>`).join("")}</table></div>
+  <p><button class="btn g" onclick="addRisk()">Add risk</button></p>
+  <div class="verdict ${resHigh?"v-r":"v-g"}">${resHigh?"A high residual risk remains: consult the ICO before processing starts (UK GDPR Article 36; DSPT 1.6.7).":"No high residual risk remains: ICO prior consultation is not needed."}</div>
+  ${resHigh?`<label class="chk"><input type="checkbox" ${d.ico?"checked":""} onchange="D().ico=this.checked;sv(1)"><span>ICO has been consulted</span></label>`:""}
+
+  <div class="grid2"><div><h3>7. Sign-off</h3><table>${Object.entries(d.sign).map(([role,[stt,dt]])=>`<tr><td><b>${role}</b></td><td><select onchange="sign('${role}',this.value)">${SIGN.map(s=>`<option ${s===stt?"selected":""}>${s}</option>`).join("")}</select></td><td class="muted">${dt?fmt(dt):""}</td></tr>`).join("")}</table></div>
+  <div><h3>8. Monitor and review</h3><div class="fld"><label>Review triggers</label><textarea onchange="D().triggers=this.value;sv()">${esc(d.triggers)}</textarea></div>
+   <div class="fld"><label>Next scheduled review</label><input type="date" value="${d.next}" onchange="D().next=this.value;sv(1)"></div></div></div>
+ </div>`;
+};
+const D=()=>S.dpias[dIdx];const R=i=>D().risks[i];
+function sv(re){save();if(re)go("dpia")}
+function togScreen(i){const d=D();d.screen=d.screen.includes(i)?d.screen.filter(x=>x!==i):[...d.screen,i];sv(1)}
+function linkAct(id){if(id){D().activities.push(id);sv(1)}}
+function linkSys(id){if(id){D().systems.push(id);sv(1)}}
+function addCtrl(i,c){if(c){R(i).ctrl.push(c);sv(1)}}
+function rmCtrl(i,c){R(i).ctrl=R(i).ctrl.filter(x=>x!==c);sv(1)}
+function addRisk(){const d=D();let n=d.risks.length+1;while(d.risks.some(r=>r.id==="R"+n))n++;d.risks.push({id:"R"+n,text:"",L:3,I:3,existing:"",opt:0,ctrl:[],action:"",owner:"",due:"",st:"Not started",rL:3,rI:3});sv(1)}
+function delRisk(i){if(confirm("Delete this risk?")){D().risks.splice(i,1);sv(1)}}
+function sign(role,v){D().sign[role]=[v,v==="Pending"?"":TODAY];logChange(`${D().id} sign-off: ${role} ${v.toLowerCase()}`);sv(1)}
+function markReviewed(){const d=D();d.reviewed=TODAY;logChange(`${d.id} reviewed`);sv(1)}
+function newDpia(){const id=nextId(S.dpias,"DPIA-");S.dpias.push({id,title:"New assessment",activities:[],systems:[],owner:"",status:"Draft",screen:[],scope:"",purpose:"",necessity:"",source:"",storage:"",access:"",transfers:"",future:"",risks:[],sign:{"DPO":["Pending",""],"Caldicott Guardian":["Pending",""],"SIRO":["Pending",""]},ico:false,reviewed:TODAY,next:"",triggers:""});dIdx=S.dpias.length-1;logChange(`${id} started`);save();go("dpia")}
+function dpiaReport(){
+ const d=D();const acts=d.activities.map(ra).filter(Boolean);
+ const row=(a,b)=>`<tr><th>${a}</th><td>${b||"—"}</td></tr>`;
+ const html=`<!doctype html><html><head><meta charset="utf-8"><title>${d.id} ${esc(d.title)}</title><style>body{font-family:Arial,sans-serif;color:#14213d;max-width:900px;margin:30px auto;padding:0 20px;font-size:13px}h1{font-size:22px}h2{font-size:15px;margin-top:22px;border-bottom:2px solid #3046c5;padding-bottom:4px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #d6dbe6;padding:6px;text-align:left;vertical-align:top}th{background:#f3f5fa;width:26%}.H{color:#b42318;font-weight:bold}.M{color:#b45309;font-weight:bold}.L{color:#0f7a4f;font-weight:bold}.note{color:#5c677d;font-size:11px}</style></head><body>
+ <p class="note">${esc(S.org.name)} (fictional) · Data protection impact assessment report · generated ${fmt(TODAY)}</p><h1>${d.id}: ${esc(d.title)}</h1>
+ <table>${row("Owner",esc(d.owner))}${row("Status",esc(d.status))}${row("Last reviewed",fmt(d.reviewed))}${row("Next review",fmt(d.next))}${row("Linked RoPA activities",acts.map(r=>`${r.id} ${esc(r.name)}`).join("<br>"))}${row("Systems",d.systems.map(s=>esc(sys(s).name)).join(", "))}</table>
+ <h2>1. Why a DPIA is needed</h2><ul>${d.screen.map(i=>`<li>${SCREEN[i]}</li>`).join("")}</ul>
+ <h2>2. Description of the processing</h2><table>${row("Scope",esc(d.scope))}${row("Purpose and benefits",esc(d.purpose))}${row("Necessity and proportionality",esc(d.necessity))}${row("Source of data",esc(d.source))}${row("Storage",esc(d.storage))}${row("Access",esc(d.access))}${row("Transfers",esc(d.transfers))}${row("Future uses",esc(d.future))}
+ ${acts.map(r=>row(`Lawful basis (${r.id})`,`${esc(r.a6.join("; "))}<br>${esc(r.a9)} ${esc(r.cond)}`)).join("")}</table>
+ <h2>3. Risks, treatment and residual risk</h2><table><tr><th>Risk</th><th>Inherent</th><th>Treatment and controls</th><th>Owner / due / status</th><th>Residual</th></tr>
+ ${d.risks.map(r=>{const a=r.L*r.I,b=r.rL*r.rI;return `<tr><td><b>${r.id}</b> ${esc(r.text)}</td><td class="${level(a)}">${a} ${LN[level(a)]}</td><td>${TREAT[r.opt]}<br>${esc(r.action)}<br><span class="note">${r.ctrl.map(c=>`${c.replace(":"," ")} ${esc(CONTROLS[c][1])}`).join("; ")}</span></td><td>${esc(r.owner)}<br>${fmt(r.due)}<br>${r.st}</td><td class="${level(b)}">${b} ${LN[level(b)]}</td></tr>`}).join("")}</table>
+ <p><b>${d.risks.some(r=>level(r.rL*r.rI)==="H")?"High residual risk remains: ICO prior consultation required (Article 36).":"No high residual risk remains: ICO prior consultation not required."}</b></p>
+ <h2>4. Sign-off</h2><table>${Object.entries(d.sign).map(([k,[s,dt]])=>row(k,`${s}${dt?" · "+fmt(dt):""}`)).join("")}</table>
+ <h2>5. Review</h2><p>${esc(d.triggers)}</p>
+ <p class="note">Prototype output with fictional data. Control references are a draft mapping. Use your browser's print option to save as PDF.</p></body></html>`;
+ const w=window.open("","_blank");if(!w){download(`${d.id}.html`,html,"text/html");return}w.document.write(html);w.document.close();
+}
+
+// ---------- AI ----------
+V.ai=()=>{
+ const aiSys=S.systems.filter(s=>s.ai);
+ const tc={"Prohibited":"c-cr","High (Annex III)":"c-sp","Limited (transparency)":"c-leg","Minimal":"c-ok"};
+ return `<div class="card"><div class="hd"><div><h2>AI inventory</h2><p class="sub">Every AI tool in use, including "shadow AI" staff use without approval. Each one gets an EU AI Act risk tier and role, a system record (so the RoPA shows what data it touches) and an AI assessment. Click a row to edit.</p></div>
+  <button class="btn" onclick="editInv()">Add AI tool</button></div>
+  <div class="scroll"><table><tr><th>Ref</th><th>AI tool</th><th>Use</th><th>Type</th><th>Department</th><th>Owner</th><th>AI Act tier</th><th>Role</th><th>Status</th><th>System</th><th>Assessment</th></tr>
+  ${S.aiinv.map((t,i)=>`<tr class="click" onclick="editInv(${i})"><td><b>${t.id}</b></td><td><b>${esc(t.name)}</b>${t.ver?` <span class="muted">v${esc(t.ver)}</span>`:""}<br><span class="muted" style="font-size:12px">${esc(t.vendorName||t.source)}</span></td><td>${esc(t.use)}</td><td>${esc(t.type)}</td><td>${t.dept==="all"?"All":esc(dept(t.dept))}</td><td>${esc(t.owner)}</td>
+   <td><span class="chip ${tc[t.tier]||"c-n"}">${esc(t.tier)}</span></td><td>${esc(t.role)}</td><td><span class="chip ${t.status.startsWith("Shadow")?"c-sp":t.status==="Approved"?"c-ok":"c-n"}">${esc(t.status)}</span></td>
+   <td>${t.system?esc(sys(t.system).name):`<button class="btn s g" onclick="event.stopPropagation();invSys(${i})">Add to systems</button>`}</td>
+   <td>${t.assess?`<span class="ref">${t.assess}</span>`:t.system?`<button class="btn s" onclick="event.stopPropagation();invAssess(${i})">Start</button>`:'<span class="muted">needs a system</span>'}</td></tr>`).join("")}</table></div>
+  <div class="note" style="margin-top:10px">EU AI Act tiers: prohibited (banned), high-risk (e.g. Annex III uses such as employment or access to essential services: risk management, human oversight, logs, transparency), limited (people must be told they are dealing with AI), minimal (voluntary codes). It applies to UK organisations whose AI output is used in the EU; UK bodies follow ICO AI guidance and UK GDPR automated decision rules. Draft tiers for discussion.</div></div>
+ <div class="card"><h2>AI risk assessments, linked to the RoPA</h2><p class="sub">Each AI system gets an impact assessment (ISO/IEC 42001 A.5) tied to the processing activities and the DPIA it feeds. The RoPA shows which records an AI system touches.</p>
+ ${aiSys.filter(s=>!S.ai.some(a=>a.system===s.id)).map(s=>`<div class="alert a"><b>${esc(s.name)}</b><span>Uses AI but has no AI assessment. <button class="btn s" onclick="newAI('${s.id}')">Start one</button></span></div>`).join("")}
+ </div>
+ ${S.ai.map((a,ai)=>{const s=sys(a.system);const acts=S.ropa.filter(r=>r.systems.includes(a.system));const done=AICTRL.filter(c=>a.ctrl[c]).length;return `<div class="card">
+  <div class="hd"><div><h2>${a.id}: ${esc(s.name)}</h2><p class="sub">Supplier: ${esc((s.vendor&&ven(s.vendor)?.name)||"in-house")} · DPIA: ${a.dpia?`<span class="ref">${a.dpia}</span>`:"none"} · RoPA: ${acts.map(r=>`<span class="ref">${r.id}</span>`).join("")} · reviewed ${fmt(a.reviewed)}</p></div>
+  <div>Risk level <select onchange="S.ai[${ai}].level=this.value;save()">${["Low","Medium","High"].map(l=>`<option ${l===a.level?"selected":""}>${l}</option>`).join("")}</select></div></div>
+  <div class="grid2"><div>${AIQ.map(([k,q])=>`<div class="fld"><label>${q}</label><textarea onchange="S.ai[${ai}].ans.${k}=this.value;save()">${esc(a.ans[k])}</textarea></div>`).join("")}</div>
+  <div><h3>ISO/IEC 42001 controls in place (${done}/${AICTRL.length})</h3>${AICTRL.map(c=>`<label class="chk"><input type="checkbox" ${a.ctrl[c]?"checked":""} onchange="S.ai[${ai}].ctrl['${c}']=this.checked;save();go('ai')"><span>${cref(c)} ${esc(CONTROLS[c][1])}</span></label>`).join("")}
+  <h3>Records this AI touches</h3>${acts.map(r=>`<div><span class="ref">${r.id}</span> ${esc(r.name)} ${raChips(r)}</div>`).join("")}</div></div></div>`}).join("")}`;
+};
+function editInv(i){const isNew=i===undefined;const t=isNew?{id:nextId(S.aiinv,"AIT-"),name:"",ver:"",use:"",type:"Generative",dept:"all",owner:"",source:"Vendor",vendorName:"",role:"Deployer",tier:"Minimal",status:"Requested",system:"",assess:"",note:""}:S.aiinv[i];
+ openForm(isNew?"Add AI tool":`${t.id}: ${t.name}`,F.inv(),t,o=>{if(isNew){S.aiinv.push(o);logChange(`${o.id} ${o.name} added to the AI inventory`)}else S.aiinv[i]=o},isNew?null:()=>S.aiinv.splice(i,1))}
+function invSys(i){const t=S.aiinv[i];const id=nextId(S.systems,"S");S.systems.push({id,name:t.name,kind:t.use,host:"UK cloud",depts:t.dept==="all"?S.depts.map(d=>d.id):[t.dept],owner:t.owner,vendor:"",legacy:false,supported:true,paper:false,ai:true,audit:false,changed:TODAY,change:"Added from the AI inventory"});t.system=id;logChange(`${t.name} added to Systems from the AI inventory`);save();go("ai")}
+function invAssess(i){const t=S.aiinv[i];newAI(t.system);t.assess=S.ai[S.ai.length-1].id;save();go("ai")}
+function newAI(sid){const id=nextId(S.ai,"AI-");S.ai.push({id,system:sid,dpia:(S.dpias.find(d=>d.systems.includes(sid))||{}).id||"",ans:{},ctrl:{},level:"Medium",reviewed:TODAY});logChange(`${id} started for ${sys(sid).name}`);save();go("ai")}
+
+// ---------- breaches ----------
+let bSel=new Set(["S2"]);let bTime="";
+V.breach=()=>{
+ const acts=S.ropa.filter(r=>r.systems.some(s=>bSel.has(s)));
+ const sp=acts.some(isSp),ch=acts.some(isCh),cr=acts.some(isCr);
+ const subj=[...new Set(acts.flatMap(a=>a.subjects))],data=[...new Set(acts.flatMap(a=>a.data))];
+ const recs=acts.reduce((n,a)=>n+(+a.records||0),0);
+ const vens=[...new Set([...bSel].map(s=>sys(s).vendor).filter(Boolean))].map(ven).filter(Boolean);
+ const dps=S.dpias.filter(d=>d.systems.some(s=>bSel.has(s))||d.activities.some(a=>acts.some(x=>x.id===a)));
+ const disc=bTime||new Date(Date.now()-3*3600e3-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16);
+ const dl=new Date(new Date(disc).getTime()+72*3600e3);const left=Math.round((dl-Date.now())/3600e3);
+ const likely=sp||ch||cr||recs>500;
+ const noAudit=[...bSel].map(sys).filter(s=>!s.audit);
+ return `<div class="grid2"><div class="card"><h2>Breach assessment</h2><p class="sub">Tick the systems affected. The RoPA tells you what data, whose data, and who else to involve.</p>
+  ${S.systems.map(s=>`<label class="chk"><input type="checkbox" ${bSel.has(s.id)?"checked":""} onchange="bTog('${s.id}')"><span><b>${esc(s.name)}</b> ${sysChips(s)}<br><span class="muted" style="font-size:12px">${esc(s.kind)} · ${esc(s.host)}</span></span></label>`).join("")}
+  <p>Discovered: <input type="datetime-local" value="${disc}" onchange="bTime=this.value;go('breach')"></p>
+  <p><button class="btn" onclick="logIncident('${disc}')">Log as incident</button></p></div>
+ <div class="card"><h2>What may be compromised</h2>${acts.length?`
+  <div class="verdict ${likely?"v-r":"v-a"}">${likely?`Likely reportable to the ICO within 72 hours of discovery · deadline ${dl.toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})} (${left>0?left+"h left":"passed"})`:"Assess the risk: it may not need reporting, but record the decision"}</div>
+  <p>${sp?'<span class="chip c-sp">Special category</span>':""}${ch?'<span class="chip c-ch">Children</span>':""}${cr?'<span class="chip c-cr">Criminal offence data</span>':""}</p>
+  <table><tr><th>Activities</th><td>${acts.map(a=>`<span class="ref">${a.id}</span> ${esc(a.name)}`).join("<br>")}</td></tr>
+  <tr><th>Data subjects</th><td>${esc(subj.join(", "))}</td></tr><tr><th>Personal data</th><td>${esc(data.join(", "))}</td></tr>
+  <tr><th>Approx. people</th><td>${recs.toLocaleString()} (activities may overlap)</td></tr>
+  <tr><th>Recipients to consider</th><td>${esc([...new Set(acts.map(a=>a.recip))].join("; "))}</td></tr>
+  <tr><th>Suppliers involved</th><td>${vens.map(v=>esc(v.name)+(v.dpa?"":" (no DPA!)")).join(", ")||"None (in-house)"}</td></tr>
+  <tr><th>DPIAs to reopen</th><td>${dps.map(d=>`<span class="ref">${d.id}</span>`).join("")||"None"}</td></tr></table>
+  <h3>Response steps</h3><ol style="margin:0;padding-left:18px;line-height:1.7">
+   <li><b>Contain:</b> isolate the affected systems, revoke access, disconnect users</li>
+   <li><b>Activate the response team:</b> DPO, SIRO, Caldicott Guardian, IT${vens.length?`; ask ${vens.map(v=>esc(v.name)).join(", ")} for their incident report`:""}</li>
+   <li><b>Investigate and preserve evidence:</b> logs, timeline, who had access${noAudit.length?` <span class="chip c-sp">no audit log: ${noAudit.map(s=>esc(s.name)).join(", ")}</span>`:""}</li>
+   <li><b>Assess the impact</b> on people, using the table above</li>
+   <li><b>Remediate:</b> restore from backup, reset credentials, fix the cause</li>
+   <li><b>Notify:</b> ${likely?"report through the DSPT incident tool, which passes it to the ICO, within 72 hours":"record the decision not to report"}; ${sp||ch?"high risk to individuals is likely, so plan how and when to tell affected families (Article 34)":"decide whether affected people must be told, and record why"}</li></ol>
+  <p class="muted" style="font-size:12.5px;margin-top:8px">Afterwards: reopen the linked DPIAs and update the RoPA if the risk picture has changed.</p>`:'<p class="sub">Tick at least one system.</p>'}</div></div>
+ <div class="card"><h2>Incident log</h2><p class="sub">Personal data breaches, AI incidents (an AI tool causing harm, e.g. a wrong note or a biased decision) and near misses, in one log.</p><table><tr><th>Ref</th><th>Type</th><th>Discovered</th><th>Systems</th><th>What happened</th><th>Reporting decision</th><th>Status</th><th>Lessons</th></tr>
+ ${S.incidents.map((x,i)=>`<tr><td><b>${x.id}</b></td><td><select onchange="S.incidents[${i}].type=this.value;save()">${["Personal data breach","AI incident","Near miss"].map(s=>`<option ${s===(x.type||"Personal data breach")?"selected":""}>${s}</option>`).join("")}</select></td><td>${new Date(x.found).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})}</td><td>${x.systems.map(s=>esc(sys(s).name)).join(", ")}</td>
+  <td><textarea onchange="S.incidents[${i}].what=this.value;save()">${esc(x.what)}</textarea></td><td><textarea onchange="S.incidents[${i}].reported=this.value;save()">${esc(x.reported)}</textarea></td>
+  <td><select onchange="S.incidents[${i}].status=this.value;save()">${["Open","Contained","Reported","Closed"].map(s=>`<option ${s===x.status?"selected":""}>${s}</option>`).join("")}</select></td>
+  <td><textarea onchange="S.incidents[${i}].lessons=this.value;save()">${esc(x.lessons)}</textarea></td></tr>`).join("")}</table></div>`;
+};
+function bTog(id){bSel.has(id)?bSel.delete(id):bSel.add(id);go("breach")}
+function logIncident(disc){if(!bSel.size)return;const id=nextId(S.incidents,"INC-");S.incidents.unshift({id,type:"Personal data breach",found:disc,systems:[...bSel],what:"",reported:"",status:"Open",lessons:""});logChange(`${id} logged (${[...bSel].map(s=>sys(s).name).join(", ")})`);save();go("breach")}
+
+// ---------- controls ----------
+V.controls=()=>{
+ const used={};S.dpias.forEach(d=>d.risks.forEach(r=>r.ctrl.forEach(c=>(used[c]=used[c]||[]).push(`${d.id} ${r.id}`))));
+ S.ai.forEach(a=>AICTRL.forEach(c=>{if(a.ctrl[c])(used[c]=used[c]||[]).push(a.id)}));
+ const rows=k=>Object.keys(CONTROLS).filter(c=>c.startsWith(k)).map(c=>`<tr><td>${cref(c)}</td><td>${esc(CONTROLS[c][1])}</td><td>${(used[c]||[]).map(u=>`<span class="chip c-n">${u}</span>`).join("")||'<span class="muted">Not used yet</span>'}</td></tr>`).join("");
+ return `<div class="card"><h2>Controls mapping</h2><p class="sub">DPIA risks are treated with ISO/IEC 27001:2022 Annex A controls; AI risks also with ISO/IEC 42001:2023 Annex A. If a control fails an audit, this shows every risk and assessment that relies on it.</p>
+ <div class="note">Draft mapping for discussion. Titles are shortened; selection and wording to be checked by a qualified assessor.</div>
+ <div class="grid2"><div><h3>ISO/IEC 27001:2022</h3><table><tr><th>Control</th><th>Title</th><th>Relied on by</th></tr>${rows("27001")}</table></div>
+ <div><h3>ISO/IEC 42001:2023</h3><table><tr><th>Control</th><th>Title</th><th>Relied on by</th></tr>${rows("42001")}</table></div></div></div>`;
+};
+
+// ---------- DSPT ----------
+V.dspt=iss=>{
+ const sp=S.ropa.filter(isSp);const noNdo=sp.filter(r=>r.ndo==="n/a");
+ const items=[
+  ["1.1.2",S.org.dpo&&S.org.cg&&S.org.siro?"Met":"Partial",`DPO, Caldicott Guardian and SIRO named in Settings.`,["27001:5.1"]],
+  ["1.4.1",S.depts.every(d=>monthsAgo(d.attested)<=12)?"Met":"Partial",`${S.ropa.length} RoPA activities; ${S.depts.filter(d=>monthsAgo(d.attested)<=12).length}/${S.depts.length} departments confirmed in the last 12 months.`,["27001:5.9","27001:5.34"]],
+  ["1.4.4",noNdo.length?"Partial":"Met",`Opt-out position recorded on every activity with health data${noNdo.length?`; missing on ${noNdo.map(r=>r.id).join(", ")}`:""}.`,["27001:5.34"]],
+  ["1.6.5",S.dpias.length?"Met":"Not met",`${S.dpias.length} DPIAs with screening, risks, controls and sign-off.`,["27001:5.34","42001:A.5.2"]],
+  ["1.6.7",S.dpias.some(d=>d.risks.some(r=>level(r.rL*r.rI)==="H")&&!d.ico)?"Not met":"Met","High residual risks are flagged for ICO prior consultation.",["27001:5.31"]],
+  ["1.7.2",S.vendors.some(v=>/destruct/i.test(v.service)&&v.dpa)?"Met":"Partial","Destruction supplier recorded with a contract.",["27001:7.10","27001:8.10"]],
+  ["1.7.4",S.ropa.every(r=>r.ret)?"Met":"Partial","Retention recorded on every RoPA activity.",["27001:8.10"]],
+  ["4.1.2",S.systems.some(s=>!s.audit&&S.ropa.some(r=>r.systems.includes(s.id)&&isSp(r)))?"Partial":"Met",`${S.systems.filter(s=>!s.audit).length} systems have no audit log.`,["27001:5.15","27001:5.18","27001:8.15"]],
+  ["6.1.1","Met",`Breach assessment and incident log (${S.incidents.length} logged).`,["27001:5.24","27001:5.26"]],
+  ["8.1.4",S.systems.some(s=>!s.supported)?"Not met":"Met",`Unsupported: ${S.systems.filter(s=>!s.supported).map(s=>s.name).join(", ")||"none"}.`,["27001:8.8"]],
+ ];
+ const c={Met:"c-ok",Partial:"c-leg","Not met":"c-sp"};
+ return `<div class="card"><h2>DSPT evidence view</h2><p class="sub">Which part of the workspace answers which DSPT assertion, worked out from the live data, with the ISO 27001 controls behind it. Ready for the annual submission instead of a once-a-year scramble.</p>
+ <div class="note">Uses an older DSPT numbering. The current toolkit differs by organisation type (some NHS bodies now follow the NCSC Cyber Assessment Framework), so references will be remapped.</div>
+ <div class="scroll"><table><tr><th>DSPT</th><th>Assertion</th><th>Status</th><th>Evidence in this workspace</th><th>ISO controls</th></tr>
+ ${items.map(([k,st,ev,ct])=>`<tr><td>${dref(k)}</td><td>${DSPT[k]}</td><td><span class="chip ${c[st]}">${st}</span></td><td>${esc(ev)}</td><td>${ct.map(cref).join("")}</td></tr>`).join("")}</table></div></div>`;
+};
+
+// ---------- law ----------
+V.law=()=>`<div class="card"><h2>UK GDPR, EU GDPR and the Data (Use and Access) Act 2025</h2><p class="sub">The workspace is set to UK GDPR + DPA 2018. These are the differences that affect RoPA, DPIA, subject access and breach work. DUAA changes come into force in stages, so check the commencement status before relying on them.</p>
+ <div class="scroll"><table><tr><th>Area</th><th>UK (UK GDPR + DPA 2018, as amended by DUAA)</th><th>EU GDPR</th><th>Where it shows here</th></tr>
+ <tr><td><b>Regulator</b></td><td>ICO</td><td>National supervisory authority; lead authority for cross-border processing</td><td>Breach view, Article 36 check</td></tr>
+ <tr><td><b>Special category conditions</b></td><td>Article 9 plus DPA 2018 Schedule 1 conditions (e.g. para 2 health or social care, para 18 safeguarding)</td><td>Article 9 plus member state law</td><td>RoPA: Article 9 and Schedule 1 columns</td></tr>
+ <tr><td><b>Lawful basis</b></td><td>DUAA adds "recognised legitimate interests" (e.g. safeguarding, crime, emergencies) that do not need a balancing test</td><td>Legitimate interests always need the balancing test</td><td>RoPA: LIA flag</td></tr>
+ <tr><td><b>Automated decisions</b></td><td>DUAA relaxes the general restriction but keeps strict limits where special category data is used; safeguards (information, human review, challenge) still required</td><td>Article 22 restriction</td><td>AI assessments: human review question</td></tr>
+ <tr><td><b>Subject access</b></td><td>DUAA: searches must be reasonable and proportionate; the clock can pause while the organisation asks for clarification</td><td>One month, extendable; no statutory "reasonable search" wording</td><td>Systems map shows every place to search</td></tr>
+ <tr><td><b>International transfers</b></td><td>UK adequacy regulations, IDTA or UK Addendum; DUAA "data protection test" (not materially lower)</td><td>EU adequacy decisions, SCCs</td><td>Suppliers: transfer mechanism</td></tr>
+ <tr><td><b>Complaints</b></td><td>DUAA: organisations must have a complaints process and acknowledge complaints within 30 days</td><td>No equivalent duty</td><td>To add: complaints log</td></tr>
+ <tr><td><b>Health and care extras</b></td><td>National data opt-out, Caldicott principles, DSPT, CQC</td><td>Not applicable</td><td>RoPA NDO column, DSPT view, sign-off roles</td></tr>
+ <tr><td><b>AI</b></td><td>No AI Act; ICO guidance on AI and data protection; DSPT adding AI questions</td><td>EU AI Act (risk tiers; high-risk obligations phased in)</td><td>AI assessments with ISO 42001 controls</td></tr>
+ </table></div><div class="note" style="margin-top:10px">Summary for orientation only; not legal advice.</div></div>`;
+
+// ---------- settings ----------
+V.settings=()=>`<div class="grid2"><div class="card"><h2>Organisation</h2>
+ ${[["name","Organisation name"],["type","Organisation type"],["dpo","DPO"],["cg","Caldicott Guardian"],["siro","SIRO"],["law","Law applied"]].map(([k,l])=>`<div class="fld"><label>${l}</label><input type="text" value="${esc(S.org[k])}" style="width:100%" onchange="S.org.${k}=this.value;save();go('settings')"></div>`).join("")}
+ <div class="f2"><div class="fld"><label>High risk from score</label><input type="number" value="${S.org.scoreHigh}" onchange="S.org.scoreHigh=+this.value;save()"></div><div class="fld"><label>Medium risk from score</label><input type="number" value="${S.org.scoreMed}" onchange="S.org.scoreMed=+this.value;save()"></div></div></div>
+ <div class="card"><h2>Departments</h2><table><tr><th>Department</th><th>Owner</th></tr>${S.depts.map((d,i)=>`<tr><td><input value="${esc(d.name)}" onchange="S.depts[${i}].name=this.value;save()"></td><td><input value="${esc(d.owner)}" onchange="S.depts[${i}].owner=this.value;save()"></td></tr>`).join("")}</table>
+ <h3>Assumptions in this prototype</h3><ul style="padding-left:18px;line-height:1.6;margin:0">
+  <li>A children's health, care and education charity; settings above can be changed for an NHS trust, council or care home.</li>
+  <li>UK GDPR and DPA 2018 first; EU GDPR and DUAA shown as differences.</li>
+  <li>Risk = likelihood × impact on 1-5 scales; impact definitions to be agreed with the organisation.</li>
+  <li>DPIA risks mapped to ISO/IEC 27001:2022, AI risks also to ISO/IEC 42001:2023 (draft mapping).</li>
+  <li>DSPT references use an older numbering and will be remapped to the current toolkit.</li>
+  <li>Data entered here stays in this browser; in a real deployment it would stay in the organisation's own tenancy and is never used to train AI.</li></ul></div></div>`;
+
+load();go("overview");
+</script>
+</body></html>
